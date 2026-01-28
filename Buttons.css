@@ -1,4 +1,4 @@
-/* ===== BUTTON CONTAINER ===== */
+/* Button container centered */
 #button-container {
   position: absolute;
   top: 50%;
@@ -7,78 +7,18 @@
   height: 0;
 }
 
-/* ===== PLANET BUTTONS ===== */
+/* Single orbiting button */
 .cosmic-btn {
   position: absolute;
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
+  background: radial-gradient(circle at 30% 30%, #5DA8FF, #0A1B2B);
   color: #ffffff;
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(100,180,255,0.6);
-  overflow: hidden;
-}
-
-/* PLANET SIZES & GRADIENTS */
-#home { width: 120px; height: 120px; background: radial-gradient(circle at 30% 30%, #5DA8FF, #0A1B2B); }
-#shop { width: 120px; height: 120px; background: radial-gradient(circle at 30% 30%, #FFAB5D, #2B0A0A); }
-#downloads { width: 140px; height: 140px; background: radial-gradient(circle at 30% 30%, #70FF8F, #0A2B14); }
-#affiliate { width: 160px; height: 160px; background: radial-gradient(circle at 30% 30%, #FF70C2, #2B0A1B); }
-#membership { width: 150px; height: 150px; background: radial-gradient(circle at 30% 30%, #FFD870, #2B2B0A); }
-#about { width: 130px; height: 130px; background: radial-gradient(circle at 30% 30%, #70C2FF, #0A1B2B); }
-
-/* PLANET TEXT */
-.cosmic-btn span {
-  pointer-events: none;
-  font-size: 14px;
-  text-shadow: 0 0 4px rgba(0,0,0,0.8);
-}
-
-/* ===== PAUSE/DONATE BUTTON ===== */
-#donate {
-  width: 140px;
-  height: 140px;
-  position: absolute;          /* center in container */
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  display: flex;
-  flex-direction: column;      /* stack top/bottom halves */
-  overflow: hidden;            /* clip excess */
-  box-shadow: 0 0 12px rgba(100,180,255,0.6);
-  z-index
-  cursor: pointer;
-}
-
-/* Pause icon top */
-#donate .pause {
-  position: absolute;
-  top: 15%;
-  font-size: 28px;
-  color: #fff;
-}
-
-/* Donate text bottom */
-#donate .donate {
-  position: absolute;
-  bottom: 15%;
-  font-size: 18px;
   font-weight: bold;
-  color: #fff;
-}
-
-/* Hover effect */
-#donate:hover {
-  transform: translate(-50%, -50%) scale(1.05);
-  box-shadow: 0 0 18px rgba(100,180,255,0.8);
-#donate .pause-half,
-#donate .donate-half {
-  font-weight: bold;
-  color: #ffffff;
   text-shadow: 
      0 1px 0 #bbb,
      0 2px 0 #999,
@@ -87,9 +27,48 @@
      0 5px 0 #333,
      0 6px 6px rgba(0,0,0,0.4);
   text-align: center;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(100,180,255,0.6);
+}
+
+/* Center button */
+#donate {
+  width: 140px;
+  height: 140px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 0 12px rgba(100,180,255,0.6);
+  z-index: 1000;
+  cursor: pointer;
+}
+
+#donate .pause-half,
+#donate .donate-half {
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 
+     0 1px 0 #bbb,
+     0 2px 0 #999,
+     0 3px 0 #777,
+     0 4px 0 #555,
+     0 5px 0 #333,
+     0 6px 6px rgba(0,0,0,0.4);
   cursor: pointer;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Hover glow */
+#donate:hover {
+  transform: translate(-50%, -50%) scale(1.05);
+  box-shadow: 0 0 18px rgba(100,180,255,0.8);
 }
