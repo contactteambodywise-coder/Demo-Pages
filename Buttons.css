@@ -1,17 +1,56 @@
-/* ===== PAUSE/DONATE BUTTON ===== */
+/* BUTTON CONTAINER */
+#button-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+}
+
+/* PLANET BUTTONS */
+.cosmic-btn {
+  position: absolute;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: #ffffff;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(100,180,255,0.6);
+  overflow: hidden;
+}
+
+/* Set width, height, and gradient for each planet */
+#home { width: 120px; height: 120px; background: radial-gradient(circle at 30% 30%, #5DA8FF, #0A1B2B); }
+#shop { width: 120px; height: 120px; background: radial-gradient(circle at 30% 30%, #FFAB5D, #2B0A0A); }
+#downloads { width: 140px; height: 140px; background: radial-gradient(circle at 30% 30%, #70FF8F, #0A2B14); }
+#affiliate { width: 160px; height: 160px; background: radial-gradient(circle at 30% 30%, #FF70C2, #2B0A1B); }
+#membership { width: 150px; height: 150px; background: radial-gradient(circle at 30% 30%, #FFD870, #2B2B0A); }
+#about { width: 130px; height: 130px; background: radial-gradient(circle at 30% 30%, #70C2FF, #0A1B2B); }
+
+/* PLANET TEXT */
+.cosmic-btn span {
+  pointer-events: none;
+  font-size: 14px;
+  text-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+
+/* DONATE/PAUSE BUTTON */
 #donate {
   width: 140px;
   height: 140px;
-  position: absolute;          /* relative to #button-container */
-  top: 50%;                    /* center vertically */
-  left: 50%;                   /* center horizontally */
-  transform: translate(-50%, -50%); /* exactly center */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 50%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 0 12px rgba(100,180,255,0.6);
-  z-index: 1000;               /* ensure it’s above orbiting planets */
+  z-index: 1000;
 }
 
 #donate .pause-half,
@@ -23,11 +62,10 @@
   font-weight: bold;
   font-size: 20px;
   color: #ffffff;
-  transition: all 0.3s ease-in-out;
   cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Top = pause, bottom = donate */
 #donate .pause-half {
   background: radial-gradient(circle at 30% 30%, #FFA500, #FF4500);
   border-bottom: 1px solid rgba(255,255,255,0.2);
@@ -38,7 +76,6 @@
   border-top: 1px solid rgba(255,255,255,0.2);
 }
 
-/* Hover glow effect */
 #donate .pause-half:hover,
 #donate .donate-half:hover {
   transform: scale(1.05);
