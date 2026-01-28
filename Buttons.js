@@ -1,3 +1,4 @@
+// ===== ORBITING PLANETS =====
 const buttonData = [
   {id:'home', distance:140, speed:0.2, angle:0},
   {id:'shop', distance:180, speed:0.18, angle:0},
@@ -11,7 +12,7 @@ let paused = false;
 
 function animate() {
   buttonData.forEach(btn => {
-    if(!paused) btn.angle += btn.speed;
+    if (!paused) btn.angle += btn.speed;
     const x = btn.distance * Math.cos(btn.angle);
     const y = btn.distance * Math.sin(btn.angle);
     const el = document.getElementById(btn.id);
@@ -22,13 +23,13 @@ function animate() {
 
 animate();
 
-/* ===== Pause / Resume ===== */
-document.querySelector('#donate .pause').addEventListener('click', () => {
+// ===== PAUSE / RESUME =====
+document.querySelector('#donate .pause-half').addEventListener('click', () => {
   paused = !paused;
-  document.querySelector('#donate .pause').textContent = paused ? '▶' : '⏸';
+  document.querySelector('#donate .pause-half').textContent = paused ? '▶' : '⏸';
 });
 
-/* ===== Donate button click ===== */
-document.querySelector('#donate .donate').addEventListener('click', () => {
+// ===== DONATE BUTTON =====
+document.querySelector('#donate .donate-half').addEventListener('click', () => {
   window.open('https://www.paypal.com/donate', '_blank');
 });
