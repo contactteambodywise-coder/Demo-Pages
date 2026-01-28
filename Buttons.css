@@ -41,17 +41,16 @@
 #donate {
   width: 140px;
   height: 140px;
-  position: absolute;
+  position: absolute;          /* center in container */
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, #FFA500 50%, #70C2FF 50%);
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;      /* stack top/bottom halves */
+  overflow: hidden;            /* clip excess */
   box-shadow: 0 0 12px rgba(100,180,255,0.6);
-  z-index: 1000;
+  z-index
   cursor: pointer;
 }
 
