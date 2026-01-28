@@ -4,53 +4,36 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 0;
-  height: 0;
   transform: translate(-50%, -50%);
   border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #FFA500 50%, #70C2FF 50%);
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  justify-content: center;
+  align-items: center;
   box-shadow: 0 0 12px rgba(100,180,255,0.6);
+  cursor: pointer;
   z-index: 1000;
 }
 
-/* Give each half rounded corners to fill the circle */
-#donate .pause-half {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  font-size: 20px;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  background: radial-gradient(circle at 30% 30%, #FFA500, #FF4500);
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  border-top-left-radius: 70px;   /* half of width */
-  border-top-right-radius: 70px;
+/* Pause icon on top */
+#donate .pause {
+  position: absolute;
+  top: 15%;
+  font-size: 28px;
+  color: #fff;
 }
 
-#donate .donate-half {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* Donate text on bottom */
+#donate .donate {
+  position: absolute;
+  bottom: 15%;
+  font-size: 18px;
   font-weight: bold;
-  font-size: 20px;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.3s ease-in-out;
-  background: radial-gradient(circle at 30% 30%, #70C2FF, #0A1B2B);
-  border-top: 1px solid rgba(255,255,255,0.2);
-  border-bottom-left-radius: 70px;  /* half of width */
-  border-bottom-right-radius: 70px;
+  color: #fff;
 }
 
-/* Hover glow */
-#donate .pause-half:hover,
-#donate .donate-half:hover {
-  transform: scale(1.05);
+/* Hover effect */
+#donate:hover {
+  transform: translate(-50%, -50%) scale(1.05);
   box-shadow: 0 0 18px rgba(100,180,255,0.8);
 }
