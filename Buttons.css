@@ -1,3 +1,4 @@
+/* === Central Pause/Donate Button === */
 #donate {
   width: 140px;
   height: 140px;
@@ -10,11 +11,10 @@
   flex-direction: column;
   overflow: hidden;
   box-shadow: 0 0 12px rgba(100,180,255,0.6);
-  z-index: 1000;
   cursor: pointer;
 }
 
-/* Top half = pause */
+/* Top half = Pause */
 #donate .pause-half {
   width: 100%;
   height: 50%;
@@ -36,7 +36,7 @@
   cursor: pointer;
 }
 
-/* Bottom half = donate */
+/* Bottom half = Donate */
 #donate .donate-half {
   width: 100%;
   height: 50%;
