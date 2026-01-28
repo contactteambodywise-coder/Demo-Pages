@@ -1,60 +1,68 @@
+/* BUTTON CONTAINER */
 #button-container {
   position: absolute;
   top: 50%;
   left: 50%;
   width: 0;
   height: 0;
-  pointer-events: auto;
 }
 
+/* COSMIC BUTTONS - PLANET STYLE */
 .cosmic-btn {
   position: absolute;
-  font-size: 18px;
   font-weight: bold;
-  color: #70c2ff;
-  background: rgba(0,0,0,0.25);
-  border: 2px solid #70c2ff;
-  border-radius: 50%;
+  color: #ffffff;
   text-align: center;
   cursor: pointer;
-  box-shadow: 0 0 10px #70c2ff, 0 0 20px rgba(79,179,255,0.5), 0 0 40px rgba(79,179,255,0.3);
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: all 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  box-shadow: 0 0 10px rgba(100,180,255,0.6);
+  overflow: hidden;
 }
 
+/* PLANET GRADIENTS */
+#home { width: 120px; height: 120px; background: radial-gradient(circle at 30% 30%, #5DA8FF, #0A1B2B); }
+#shop { width: 120px; height: 120px; background: radial-gradient(circle at 30% 30%, #FFAB5D, #2B0A0A); }
+#downloads { width: 140px; height: 140px; background: radial-gradient(circle at 30% 30%, #70FF8F, #0A2B14); }
+#affiliate { width: 160px; height: 160px; background: radial-gradient(circle at 30% 30%, #FF70C2, #2B0A1B); }
+#membership { width: 150px; height: 150px; background: radial-gradient(circle at 30% 30%, #FFD870, #2B2B0A); }
+#about { width: 130px; height: 130px; background: radial-gradient(circle at 30% 30%, #70C2FF, #0A1B2B); }
+
+/* PLANET TEXT */
+.cosmic-btn span {
+  pointer-events: none;
+  text-align: center;
+  font-size: 14px;
+  color: #ffffff;
+  text-shadow: 0 0 4px rgba(0,0,0,0.8);
+}
+
+/* PLANET ROTATION */
+@keyframes rotateAxis {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.cosmic-btn .planet-inner {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  animation: rotateAxis linear infinite;
+}
+
+/* Different speeds for each button */
+#home .planet-inner { animation-duration: 12s; }
+#shop .planet-inner { animation-duration: 10s; }
+#downloads .planet-inner { animation-duration: 14s; }
+#affiliate .planet-inner { animation-duration: 16s; }
+#membership .planet-inner { animation-duration: 18s; }
+#about .planet-inner { animation-duration: 15s; }
+
+/* HOVER EFFECT */
 .cosmic-btn:hover {
-  background: rgba(0,0,0,0.5);
-  box-shadow: 0 0 20px #70c2ff, 0 0 40px rgba(79,179,255,0.7), 0 0 60px rgba(79,179,255,0.5);
-  transform: scale(1.05);
-}
-
-#home { width: 120px; height: 120px; }
-#shop { width: 120px; height: 120px; }
-#downloads { width: 140px; height: 140px; }
-#affiliate { width: 160px; height: 160px; }
-#membership { width: 150px; height: 150px; }
-#about { width: 130px; height: 130px; }
-
-#donate {
-  width: 120px;
-  height: 120px;
-  display: flex;
-  flex-direction: column;
-}
-
-#donate div {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: bold;
-  border: 2px solid #70c2ff;
-  cursor: pointer;
-  background: rgba(0,0,0,0.25);
-}
-
-#donate div:hover {
-  background: rgba(0,0,0,0.5);
+  transform: scale(1.08);
+  box-shadow: 0 0 20px rgba(100,180,255,0.9);
 }
