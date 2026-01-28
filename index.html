@@ -2,68 +2,55 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>J&V’s Blue Universe | Explore Opportunity Without Pressure</title>
+<title>Demo Pages | Floating Buttons</title>
 
-<!-- META TAGS FOR GOOGLE -->
-<meta name="description" content="A calm place to explore opportunity without hype or pressure. Discover clarity, direction, and a smarter way to start at your own pace.">
-
-<!-- OPEN GRAPH / SOCIAL SHARING -->
-<meta property="og:title" content="J&V’s Blue Universe">
-<meta property="og:description" content="Explore opportunity without pressure or hype.">
-<meta property="og:type" content="website">
-
-<!-- LINK TO BUTTONS CSS -->
+<!-- CSS for buttons only -->
 <link rel="stylesheet" href="Buttons.css">
 
-<!-- MAIN STYLES (if needed) -->
 <style>
 html, body {
   margin: 0;
   padding: 0;
   background: black;
-  overflow: hidden;
   width: 100%;
   height: 100%;
   font-family: "Segoe UI", sans-serif;
+  overflow: hidden;
 }
 
-/* Page content styling */
+/* Optional demo page content */
 #page-content {
   position: absolute;
-  top: 240px;
+  top: 20px;
   left: 50%;
   transform: translateX(-50%);
-  width: 80%;
-  max-width: 900px;
   text-align: center;
-  font-size: 28px;
-  line-height: 1.6;
+  font-size: 24px;
   color: #70c2ff;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.85);
-  z-index: 10000;
 }
 </style>
 </head>
 <body>
 
-<!-- Space Canvas -->
-<canvas id="space"></canvas>
-
-<!-- LOGO -->
-<div id="logo-wrapper">
-  <div id="jv">J&V’s</div>
-  <div id="blue-universe">Blue Universe</div>
-
-  <!-- BUTTON CONTAINER -->
-  <div id="button-container"></div>
-</div>
-
-<!-- PAGE CONTENT -->
 <div id="page-content">
-  <p>Welcome to J&V’s Blue Universe! [Add your main page content here]</p>
+  <p>Demo Page for Floating Buttons</p>
 </div>
 
-<!-- LINK TO BUTTONS JS -->
+<!-- Buttons container -->
+<div id="button-container">
+  <div class="cosmic-btn" id="home" data-link="index.html">Home</div>
+  <div class="cosmic-btn" id="shop" data-link="shop.html">Shop</div>
+  <div class="cosmic-btn" id="downloads" data-link="downloads.html">Downloads</div>
+  <div class="cosmic-btn" id="affiliate" data-link="affiliate.html">Affiliate Links</div>
+  <div class="cosmic-btn" id="membership" data-link="membership.html">Membership</div>
+  <div class="cosmic-btn" id="about" data-link="about.html">About Us</div>
+  <div class="cosmic-btn" id="donate">
+    <div class="pause-half">⏸</div>
+    <div class="donate-half">Donate</div>
+  </div>
+</div>
+
+<!-- JS for buttons only -->
 <script src="Buttons.js"></script>
 
 </body>
