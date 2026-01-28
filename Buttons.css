@@ -1,37 +1,3 @@
-/* Button container centered */
-#button-container {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
-}
-
-/* Single orbiting button */
-.cosmic-btn {
-  position: absolute;
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: radial-gradient(circle at 30% 30%, #5DA8FF, #0A1B2B);
-  color: #ffffff;
-  font-weight: bold;
-  text-shadow: 
-     0 1px 0 #bbb,
-     0 2px 0 #999,
-     0 3px 0 #777,
-     0 4px 0 #555,
-     0 5px 0 #333,
-     0 6px 6px rgba(0,0,0,0.4);
-  text-align: center;
-  cursor: pointer;
-  box-shadow: 0 0 10px rgba(100,180,255,0.6);
-}
-
-/* Center button */
 #donate {
   width: 140px;
   height: 140px;
@@ -48,13 +14,15 @@
   cursor: pointer;
 }
 
-#donate .pause-half,
-#donate .donate-half {
-  flex: 1;
+/* Top half = pause */
+#donate .pause-half {
+  width: 100%;
+  height: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
   font-weight: bold;
+  font-size: 28px;
   color: #fff;
   text-shadow: 
      0 1px 0 #bbb,
@@ -63,12 +31,36 @@
      0 4px 0 #555,
      0 5px 0 #333,
      0 6px 6px rgba(0,0,0,0.4);
+  background: radial-gradient(circle at 30% 30%, #FFA500, #FF4500);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
   cursor: pointer;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Bottom half = donate */
+#donate .donate-half {
+  width: 100%;
+  height: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 18px;
+  color: #fff;
+  text-shadow: 
+     0 1px 0 #bbb,
+     0 2px 0 #999,
+     0 3px 0 #777,
+     0 4px 0 #555,
+     0 5px 0 #333,
+     0 6px 6px rgba(0,0,0,0.4);
+  background: radial-gradient(circle at 30% 30%, #70C2FF, #0A1B2B);
+  border-top: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
 }
 
 /* Hover glow */
-#donate:hover {
-  transform: translate(-50%, -50%) scale(1.05);
+#donate:hover .pause-half,
+#donate:hover .donate-half {
+  transform: scale(1.05);
   box-shadow: 0 0 18px rgba(100,180,255,0.8);
 }
