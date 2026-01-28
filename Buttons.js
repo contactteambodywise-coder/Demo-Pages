@@ -1,11 +1,11 @@
 // ===== ORBITING PLANETS =====
 const buttonData = [
-  {id:'home', distance:140, speed:0.2, angle:0},
-  {id:'shop', distance:180, speed:0.18, angle:0},
-  {id:'downloads', distance:220, speed:0.14, angle:0},
-  {id:'affiliate', distance:260, speed:0.12, angle:0},
-  {id:'membership', distance:300, speed:0.10, angle:0},
-  {id:'about', distance:340, speed:0.08, angle:0}
+  {id:'home', distance:140, speed:0.002, angle:0},
+  {id:'shop', distance:180, speed:0.0018, angle:0},
+  {id:'downloads', distance:220, speed:0.0014, angle:0},
+  {id:'affiliate', distance:260, speed:0.0012, angle:0},
+  {id:'membership', distance:300, speed:0.001, angle:0},
+  {id:'about', distance:340, speed:0.0008, angle:0}
 ];
 
 let paused = false;
