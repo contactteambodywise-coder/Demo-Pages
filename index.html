@@ -2,17 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Pause/Donate Button Demo</title>
-  <link rel="stylesheet" href="Buttons.css">
+  <title>Cosmic Starfield Wormhole</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: black; }
+    canvas { display: block; }
+  </style>
 </head>
 <body>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<script>
+  // Scene, Camera, Renderer
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 2000);
+  camera.position.z = 50;
 
-  <!-- Central Pause/Donate Button -->
-  <div id="donate">
-    <div class="pause-half">⏸</div>
-    <div class="donate-half">Donate</div>
-  </div>
+  const renderer = new THREE.WebGLRenderer({antialias: true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.body.appendChild(renderer.domElement);
 
-  <script src="Buttons.js"></script>
+  // Starfield
+  const starCount = 2000;
+  const starGeometry = new THREE.BufferGeometry();
+  const starPositions = [];
+
+  for(let i = 0; i < starCount; i++) {
+    const x = (Math.random() - 0.5) * 2000;
+    const y = (Math.random() - 0.5) * 2000;
+    const z = (Math.random() - 0.5) * 2000;
+    starPositions.push(x, y, z);
+  }
+
+  starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starPositions, 3));
+  const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.8 });
+  const stars = new THREE.Points(starGeometry, starMaterial);
+  scene.add(stars);
+
+  // Wormhole Tube (simple glowing cylinder effect)
+  const wormholeGeometry = new THREE.CylinderGeometry(20, 0, 400, 64, 1, true);
+  const wormholeMaterial = new THREE.MeshBasicMaterial({ 
+    color: 0x33ccff, 
+    wireframe: true, 
+    opacity: 0.2, 
+    transparent: true 
+  });
+  const wormhole = new THREE.Mesh(wormholeGeometry, wormholeMaterial);
+  wormhole.rotation.x = Math.PI / 2;
+  scene.add(wormhole);
+
+  // Mouse interaction
+  let mouseX = 0;
+  let mouseY = 0;
+  document.addEventListener('mousemove', (event) => {
+    mouseX = (event.clientX / window.innerWidth - 0.5) * 2;
+    mouseY = (event.clientY / window.innerHeight - 0.5) * 2;
+  });
+
+  // Animation loop
+  const clock = new THREE.Clock();
+
+  function animate() {
+    requestAnimationFrame(animate);
+
+    const delta = clock.getDelta();
+
+    // Star rotation
+    stars.rotation.y += delta * 0.05;
+    stars.rotation.x += delta * 0.02;
+
+    // Wormhole rotation
+    wormhole.rotation.z += delta * 0.1;
+
+    // Camera subtle movement based on mouse
+    camera.position.x += (mouseX * 50 - camera.position.x) * 0.05;
+    camera.position.y += (-mouseY * 50 - camera.position.y) * 0.05;
+    camera.lookAt(scene.position);
+
+    renderer.render(scene, camera);
+  }
+
+  animate();
+
+  // Handle resizing
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+</script>
 </body>
 </html>
