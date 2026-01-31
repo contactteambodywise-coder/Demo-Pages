@@ -46,7 +46,7 @@
     // ---------------------------
     // THIS IS WHERE YOU ADD OBJECTS
 
-function addSphere(x=0,y=0,z=0,r=1,color=0xff0000){
+function addSphere(x=1,y=1,z=1,r=20,color=0x0000ff){
     const g = new THREE.SphereGeometry(r,32,32);
     const m = new THREE.MeshStandardMaterial({color});
     const s = new THREE.Mesh(g,m);
