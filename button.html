@@ -1,1 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ultimate Button</title>
 
+  <style>
+    .btn {
+      appearance: none;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 18px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      background: #2563eb;
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s, transform 0.1s, opacity 0.2s;
+    }
+
+    .btn:hover:not(:disabled) {
+      background: #1d4ed8;
+    }
+
+    .btn:active:not(:disabled) {
+      transform: scale(0.97);
+    }
+
+    .btn:focus-visible {
+      outline: 3px solid #93c5fd;
+      outline-offset: 2px;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .btn.loading {
+      pointer-events: none;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid white;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .tooltip {
+      position: relative;
+    }
+
+    .tooltip:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: black;
+      color: white;
+      padding: 6px 8px;
+      font-size: 12px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+
+<body>
+
+<button
+  id="ultimateBtn"
+  class="btn tooltip"
+  type="button"
+  aria-pressed="false"
+  aria-busy="false"
+  data-tooltip="Click me"
+>
+  <span class="icon">🔥</span>
+  <span class="label">Click me</span>
+</button>
+
+<script>
+  const btn = document.getElementById("ultimateBtn");
+
+  let toggled = false;
+
+  async function handleClick() {
+    if (btn.disabled) return;
+
+    // Toggle state
+    toggled = !toggled;
+    btn.setAttribute("aria-pressed", toggled);
+
+    // Loading state
+    btn.classList.add("loading");
+    btn.setAttribute("aria-busy", "true");
+    btn.disabled = true;
+
+    const label = btn.querySelector(".label");
+    const icon = btn.querySelector(".icon");
+
+    label.textContent = "Working...";
+    icon.innerHTML = `<div class="spinner"></div>`;
+
+    // Simulated async action
+    await new Promise(res => setTimeout(res, 1500));
+
+    // Restore
+    btn.disabled = false;
+    btn.classList.remove("loading");
+    btn.setAttribute("aria-busy", "false");
+
+    label.textContent = toggled ? "On" : "Off";
+    icon.textContent = toggled ? "✅" : "🔥";
+
+    // Custom event
+    btn.dispatchEvent(new CustomEvent("button:done", {
+      detail: { toggled }
+    }));
+  }
+
+  btn.addEventListener("click", handleClick);
+
+  // Keyboard safety (already handled by <button>, but explicit)
+  btn.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      btn.click();
+    }
+  });
+
+  // Example listener
+  btn.addEventListener("button:done", e => {
+    console.log("Button finished:", e.detail);
+  });
+</script>
+
+</body>
+</html>
