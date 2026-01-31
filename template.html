@@ -3,189 +3,221 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>3D-Enhanced No-Code Page Builder</title>
+<title>Ultimate 3D + HTML No-Code Page Builder</title>
 <style>
-  body {margin:0; font-family: Arial, sans-serif; background:#f0f0f0;}
-  header {background:#333; color:white; padding:10px;}
-  header h1 {margin:0;}
-  #controls {background:#444; color:white; padding:10px; display:flex; flex-wrap:wrap; gap:5px;}
-  #controls button {padding:5px 10px; cursor:pointer; border:none; border-radius:4px; background:#1E90FF; color:white;}
-  #controls button:hover {background:#0b6fc2;}
-  #builder {position:relative; padding:10px; min-height:80vh; background:white;}
-  .element-box {border:1px dashed #888; padding:10px; margin:5px 0; background:#fafafa; position:absolute; cursor:grab;}
+  body {margin:0; font-family: Arial, sans-serif; display:flex; height:100vh;}
+  header {background:#333; color:white; padding:10px; width:100%; text-align:center;}
+  #controls {background:#444; color:white; padding:10px; width:200px; overflow-y:auto;}
+  #controls button {padding:5px 10px; margin:2px 0; cursor:pointer; border:none; border-radius:4px; background:#1E90FF; color:white;}
+  #controls button:hover{background:#0b6fc2;}
+  #builder {flex:1; background:#f0f0f0; position:relative; overflow:auto;}
+  .element-box {border:1px dashed #888; padding:10px; margin:5px; background:#fafafa; position:absolute; cursor:grab;}
+  .element-box.selected{border:2px solid #ff8c00;}
   .element-box button.remove {position:absolute; top:5px; right:5px; background:red; color:white; border:none; padding:2px 5px; cursor:pointer;}
-  input, textarea, select {width:100%; margin:5px 0; padding:5px;}
-  img {max-width:100%; height:auto;}
-  canvas {display:block; margin:0 auto;}
+  input, textarea, select{width:100%; margin:3px 0; padding:3px;}
+  #sidePanel{width:250px; background:#eee; padding:10px; overflow-y:auto;}
+  canvas{display:block;}
 </style>
 </head>
 <body>
 
-<header>
-<h1>3D-Enhanced No-Code Page Builder</h1>
-<p>Click buttons to add elements or 3D objects, drag, edit, and copy HTML.</p>
-</header>
-
 <div id="controls">
+  <h3>HTML Elements</h3>
   <button onclick="addElement('h1')">Heading H1</button>
   <button onclick="addElement('p')">Paragraph</button>
   <button onclick="addElement('img')">Image</button>
   <button onclick="addElement('button')">Button</button>
-  <button onclick="add3D('cube')">3D Cube</button>
-  <button onclick="add3D('sphere')">3D Sphere</button>
+  <button onclick="addElement('a')">Link</button>
+  <button onclick="addElement('ul')">Unordered List</button>
+  <button onclick="addElement('ol')">Ordered List</button>
+  <button onclick="addElement('table')">Table</button>
+  <h3>3D Objects</h3>
+  <button onclick="add3D('cube')">Cube</button>
+  <button onclick="add3D('sphere')">Sphere</button>
   <button onclick="add3D('starfield')">Starfield</button>
+  <h3>Actions</h3>
   <button onclick="copyPage()">Copy Full Page HTML</button>
+  <button onclick="saveProject()">Save Project</button>
+  <button onclick="loadProject()">Load Project</button>
 </div>
 
-<div id="builder">
-<p>Start building your page by clicking buttons above!</p>
+<div id="builder"></div>
+
+<div id="sidePanel">
+<h3>Element Properties</h3>
+<div id="properties">
+<p>Select an element to see properties</p>
+</div>
 </div>
 
-<!-- Three.js Library -->
+<!-- Three.js -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.min.js"></script>
 
 <script>
 let elementCount = 0;
-
-// ===== NORMAL ELEMENT ADDER =====
-function addElement(type){
-    elementCount++;
-    const builder=document.getElementById('builder');
-    const box=document.createElement('div');
-    box.className='element-box';
-    box.style.top=(10+elementCount*10)+'px';
-    box.style.left=(10+elementCount*10)+'px';
-    box.setAttribute('draggable',true);
-
-    const removeBtn=document.createElement('button');
-    removeBtn.textContent='x';
-    removeBtn.className='remove';
-    removeBtn.onclick=()=>box.remove();
-    box.appendChild(removeBtn);
-
-    let elem;
-    switch(type){
-        case 'h1': elem=document.createElement('h1'); elem.contentEditable=true; elem.textContent='Heading 1'; break;
-        case 'p': elem=document.createElement('p'); elem.contentEditable=true; elem.textContent='This is a paragraph.'; break;
-        case 'img': elem=document.createElement('img'); elem.src='https://via.placeholder.com/200x100'; elem.alt='Sample Image'; break;
-        case 'button': elem=document.createElement('button'); elem.textContent='Click Me'; elem.onclick=()=>alert('Button clicked!'); break;
-    }
-    box.appendChild(elem);
-    builder.appendChild(box);
-
-    dragElement(box);
-}
+let selectedElement = null;
 
 // ===== DRAG FUNCTION =====
 function dragElement(el){
-    el.onmousedown=function(e){
-        let shiftX=e.clientX-el.getBoundingClientRect().left;
-        let shiftY=e.clientY-el.getBoundingClientRect().top;
+  el.onmousedown=function(e){
+    selectedElement = el;
+    showProperties(el);
+    let shiftX = e.clientX - el.getBoundingClientRect().left;
+    let shiftY = e.clientY - el.getBoundingClientRect().top;
 
-        function moveAt(pageX,pageY){
-            el.style.left=pageX-shiftX+'px';
-            el.style.top=pageY-shiftY+'px';
-        }
-        function onMouseMove(e){ moveAt(e.pageX,e.pageY); }
-        document.addEventListener('mousemove',onMouseMove);
-        el.onmouseup=function(){ document.removeEventListener('mousemove',onMouseMove); el.onmouseup=null; }
-    };
-    el.ondragstart=function(){ return false; };
+    function moveAt(pageX,pageY){
+      el.style.left = pageX - shiftX + 'px';
+      el.style.top = pageY - shiftY + 'px';
+    }
+    function onMouseMove(e){ moveAt(e.pageX,e.pageY); }
+    document.addEventListener('mousemove',onMouseMove);
+    el.onmouseup=function(){ document.removeEventListener('mousemove',onMouseMove); el.onmouseup=null; }
+  };
+  el.ondragstart=function(){ return false; };
+}
+
+// ===== ADD HTML ELEMENTS =====
+function addElement(type){
+  elementCount++;
+  const builder = document.getElementById('builder');
+  const box = document.createElement('div');
+  box.className='element-box';
+  box.style.top=(10+elementCount*10)+'px';
+  box.style.left=(10+elementCount*10)+'px';
+
+  const removeBtn = document.createElement('button');
+  removeBtn.textContent='x';
+  removeBtn.className='remove';
+  removeBtn.onclick=()=>box.remove();
+  box.appendChild(removeBtn);
+
+  let elem;
+  switch(type){
+    case 'h1': elem=document.createElement('h1'); elem.contentEditable=true; elem.textContent='Heading 1'; break;
+    case 'p': elem=document.createElement('p'); elem.contentEditable=true; elem.textContent='This is a paragraph.'; break;
+    case 'img': elem=document.createElement('img'); elem.src='https://via.placeholder.com/200x100'; elem.alt='Sample Image'; break;
+    case 'button': elem=document.createElement('button'); elem.textContent='Click Me'; elem.onclick=()=>alert('Button clicked!'); break;
+    case 'a': elem=document.createElement('a'); elem.href='https://example.com'; elem.target='_blank'; elem.contentEditable=true; elem.textContent='Example Link'; break;
+    case 'ul': elem=document.createElement('ul'); elem.innerHTML='<li contenteditable="true">Item 1</li><li contenteditable="true">Item 2</li>'; break;
+    case 'ol': elem=document.createElement('ol'); elem.innerHTML='<li contenteditable="true">First</li><li contenteditable="true">Second</li>'; break;
+    case 'table': elem=document.createElement('table'); elem.border='1'; elem.innerHTML='<tr><th contenteditable="true">Header 1</th><th contenteditable="true">Header 2</th></tr><tr><td contenteditable="true">Data 1</td><td contenteditable="true">Data 2</td></tr>'; break;
+  }
+  box.appendChild(elem);
+  builder.appendChild(box);
+  dragElement(box);
+}
+
+// ===== ADD 3D ELEMENTS =====
+function add3D(type){
+  const builder = document.getElementById('builder');
+  const box = document.createElement('div');
+  box.className='element-box';
+  box.style.top='50px';
+  box.style.left='50px';
+  box.style.width='300px';
+  box.style.height='300px';
+
+  const removeBtn = document.createElement('button');
+  removeBtn.textContent='x';
+  removeBtn.className='remove';
+  removeBtn.onclick=()=>box.remove();
+  box.appendChild(removeBtn);
+
+  const canvasContainer=document.createElement('div');
+  box.appendChild(canvasContainer);
+  builder.appendChild(box);
+  dragElement(box);
+
+  // 3D Scene Setup
+  const scene=new THREE.Scene();
+  const camera=new THREE.PerspectiveCamera(75,300/300,0.1,1000);
+  camera.position.z=5;
+  const renderer=new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(300,300);
+  canvasContainer.appendChild(renderer.domElement);
+  const controls=new THREE.OrbitControls(camera,renderer.domElement);
+  controls.enableDamping=true;
+  const light=new THREE.PointLight(0xffffff,1,100);
+  light.position.set(10,10,10);
+  scene.add(light);
+
+  if(type==='cube'){
+    const geometry=new THREE.BoxGeometry();
+    const material=new THREE.MeshStandardMaterial({color:0x00ff00});
+    const mesh=new THREE.Mesh(geometry,material);
+    scene.add(mesh);
+    animate();
+    function animate(){requestAnimationFrame(animate); mesh.rotation.x+=0.01; mesh.rotation.y+=0.01; controls.update(); renderer.render(scene,camera);}
+  }
+  if(type==='sphere'){
+    const geometry=new THREE.SphereGeometry(1,32,32);
+    const material=new THREE.MeshStandardMaterial({color:0x0000ff});
+    const mesh=new THREE.Mesh(geometry,material);
+    scene.add(mesh);
+    animate();
+    function animate(){requestAnimationFrame(animate); mesh.rotation.y+=0.01; controls.update(); renderer.render(scene,camera);}
+  }
+  if(type==='starfield'){
+    for(let i=0;i<200;i++){
+      const geometry=new THREE.SphereGeometry(0.05,8,8);
+      const material=new THREE.MeshBasicMaterial({color:0xffffff});
+      const star=new THREE.Mesh(geometry,material);
+      star.position.x=Math.random()*20-10;
+      star.position.y=Math.random()*20-10;
+      star.position.z=Math.random()*20-10;
+      scene.add(star);
+    }
+    animate();
+    function animate(){requestAnimationFrame(animate); controls.update(); renderer.render(scene,camera);}
+  }
+}
+
+// ===== ELEMENT SELECTION & SIDE PANEL =====
+function showProperties(el){
+  const panel=document.getElementById('properties');
+  panel.innerHTML='';
+  const type = el.querySelector('*').tagName.toLowerCase();
+  const elem=el.querySelector('*');
+
+  // Text for editable HTML elements
+  if(elem.contentEditable){
+    const label=document.createElement('label'); label.textContent='Text:';
+    const input=document.createElement('input'); input.value=elem.textContent;
+    input.oninput=function(){elem.textContent=this.value;}
+    panel.appendChild(label); panel.appendChild(input);
+  }
+
+  // Color for text or 3D object
+  if(elem.tagName==='H1'||elem.tagName==='P'||elem.tagName==='BUTTON'||elem.tagName==='A'){
+    const colorLabel=document.createElement('label'); colorLabel.textContent='Color:';
+    const colorInput=document.createElement('input'); colorInput.type='color';
+    colorInput.oninput=function(){elem.style.color=this.value;}
+    panel.appendChild(colorLabel); panel.appendChild(colorInput);
+  }
 }
 
 // ===== COPY PAGE HTML =====
 function copyPage(){
-    const builder=document.getElementById('builder');
-    const temp=document.createElement('textarea');
-    temp.value=builder.innerHTML;
-    document.body.appendChild(temp);
-    temp.select();
-    document.execCommand('copy');
-    document.body.removeChild(temp);
-    alert('Page HTML copied!');
+  const builder=document.getElementById('builder');
+  const temp=document.createElement('textarea');
+  temp.value=builder.innerHTML;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand('copy');
+  document.body.removeChild(temp);
+  alert('Page HTML copied!');
 }
 
-// ===== 3D OBJECT ADDER =====
-function add3D(type){
-    const builder=document.getElementById('builder');
-    const box=document.createElement('div');
-    box.className='element-box';
-    box.style.top='50px';
-    box.style.left='50px';
-    box.style.width='300px';
-    box.style.height='300px';
-
-    const removeBtn=document.createElement('button');
-    removeBtn.textContent='x';
-    removeBtn.className='remove';
-    removeBtn.onclick=()=>box.remove();
-    box.appendChild(removeBtn);
-
-    const canvasContainer=document.createElement('div');
-    box.appendChild(canvasContainer);
-    builder.appendChild(box);
-
-    dragElement(box);
-
-    // Three.js setup
-    const scene=new THREE.Scene();
-    const camera=new THREE.PerspectiveCamera(75,300/300,0.1,1000);
-    camera.position.z=5;
-
-    const renderer=new THREE.WebGLRenderer({antialias:true});
-    renderer.setSize(300,300);
-    canvasContainer.appendChild(renderer.domElement);
-
-    const controls=new THREE.OrbitControls(camera,renderer.domElement);
-    controls.enableDamping=true;
-
-    const light=new THREE.PointLight(0xffffff,1,100);
-    light.position.set(10,10,10);
-    scene.add(light);
-
-    if(type==='cube'){
-        const geometry=new THREE.BoxGeometry();
-        const material=new THREE.MeshStandardMaterial({color:0x00ff00});
-        const cube=new THREE.Mesh(geometry,material);
-        scene.add(cube);
-        animate();
-        function animate(){
-            requestAnimationFrame(animate);
-            cube.rotation.x+=0.01;
-            cube.rotation.y+=0.01;
-            controls.update();
-            renderer.render(scene,camera);
-        }
-    } else if(type==='sphere'){
-        const geometry=new THREE.SphereGeometry(1,32,32);
-        const material=new THREE.MeshStandardMaterial({color:0x0000ff});
-        const sphere=new THREE.Mesh(geometry,material);
-        scene.add(sphere);
-        animate();
-        function animate(){
-            requestAnimationFrame(animate);
-            sphere.rotation.y+=0.01;
-            controls.update();
-            renderer.render(scene,camera);
-        }
-    } else if(type==='starfield'){
-        for(let i=0;i<200;i++){
-            const starGeo=new THREE.SphereGeometry(0.05,8,8);
-            const starMat=new THREE.MeshBasicMaterial({color:0xffffff});
-            const star=new THREE.Mesh(starGeo,starMat);
-            star.position.x=Math.random()*20-10;
-            star.position.y=Math.random()*20-10;
-            star.position.z=Math.random()*20-10;
-            scene.add(star);
-        }
-        animate();
-        function animate(){
-            requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene,camera);
-        }
-    }
+// ===== SAVE / LOAD PROJECT =====
+function saveProject(){
+  localStorage.setItem('myPageBuilderProject',document.getElementById('builder').innerHTML);
+  alert('Project saved in browser!');
+}
+function loadProject(){
+  const data=localStorage.getItem('myPageBuilderProject');
+  if(data) document.getElementById('builder').innerHTML=data;
+  alert('Project loaded!');
 }
 </script>
 
