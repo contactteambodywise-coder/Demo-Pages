@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate 3D + HTML Page Builder (Fixed 3D)</title>
+<title>Fixed 3D + HTML Page Builder</title>
 <style>
+/* === LAYOUT === */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -45,11 +46,11 @@ body {
 
 .element-box {
   border: 1px dashed #888;
-  padding: 10px;
-  margin: 5px;
   background: #fafafa;
   position: absolute;
   cursor: grab;
+  width: 300px;  /* FIXED WIDTH */
+  height: 300px; /* FIXED HEIGHT */
 }
 
 .element-box.selected {
@@ -67,7 +68,7 @@ body {
   cursor: pointer;
 }
 
-input, textarea, select {
+input, select {
   width: 100%;
   margin: 3px 0;
   padding: 3px;
@@ -87,18 +88,11 @@ canvas {
   height: 100%;
 }
 
-/* MOBILE FRIENDLY */
+/* MOBILE */
 @media (max-width: 900px) {
-  body {
-    flex-direction: column;
-  }
-  #controls, #sidePanel {
-    width: 100%;
-    height: auto;
-  }
-  #builder {
-    height: 60vh;
-  }
+  body { flex-direction: column; }
+  #controls, #sidePanel { width: 100%; height: auto; }
+  #builder { height: 60vh; }
 }
 </style>
 </head>
@@ -128,9 +122,7 @@ canvas {
 
 <div id="sidePanel">
 <h3>Element Properties</h3>
-<div id="properties">
-<p>Select an element to see properties</p>
-</div>
+<div id="properties"><p>Select an element to see properties</p></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
@@ -140,18 +132,14 @@ canvas {
 let elementCount = 0;
 let selectedElement = null;
 
-// ===== DRAG FUNCTION =====
+// === DRAGGING FUNCTION ===
 function dragElement(el){
   el.onmousedown = function(e){
     selectedElement = el;
     showProperties(el);
     let shiftX = e.clientX - el.getBoundingClientRect().left;
     let shiftY = e.clientY - el.getBoundingClientRect().top;
-
-    function moveAt(pageX,pageY){
-      el.style.left = pageX - shiftX + 'px';
-      el.style.top = pageY - shiftY + 'px';
-    }
+    function moveAt(pageX,pageY){ el.style.left = pageX - shiftX + 'px'; el.style.top = pageY - shiftY + 'px'; }
     function onMouseMove(e){ moveAt(e.pageX,e.pageY); }
     document.addEventListener('mousemove', onMouseMove);
     el.onmouseup=function(){ document.removeEventListener('mousemove',onMouseMove); el.onmouseup=null; }
@@ -159,7 +147,7 @@ function dragElement(el){
   el.ondragstart=function(){ return false; };
 }
 
-// ===== ADD HTML ELEMENT =====
+// === ADD HTML ELEMENT ===
 function addElement(type){
   elementCount++;
   const builder = document.getElementById('builder');
@@ -192,7 +180,7 @@ function addElement(type){
   box.onclick=function(){selectedElement=box; showProperties(box);}
 }
 
-// ===== ADD 3D ELEMENT =====
+// === ADD 3D ELEMENT ===
 function add3D(type){
   const builder = document.getElementById('builder');
   const box = document.createElement('div');
@@ -209,11 +197,13 @@ function add3D(type){
   box.appendChild(removeBtn);
 
   const canvasContainer=document.createElement('div');
+  canvasContainer.style.width='100%';
+  canvasContainer.style.height='100%';
   box.appendChild(canvasContainer);
   builder.appendChild(box);
   dragElement(box);
 
-  // ===== THREE.JS =====
+  // === THREE.JS ===
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, canvasContainer.clientWidth/canvasContainer.clientHeight, 0.1, 1000);
   camera.position.z=5;
@@ -222,7 +212,6 @@ function add3D(type){
   renderer.setPixelRatio(window.devicePixelRatio);
   canvasContainer.appendChild(renderer.domElement);
 
-  // Make canvas responsive
   function resizeRenderer(){
     const width = canvasContainer.clientWidth;
     const height = canvasContainer.clientHeight;
@@ -265,7 +254,7 @@ function add3D(type){
     }
   }
 
-  // ===== 3D CONTROLS =====
+  // === 3D CONTROLS ===
   function update3DControls(){
     const panel=document.getElementById('properties');
     panel.innerHTML='';
@@ -320,7 +309,7 @@ function add3D(type){
   animate();
 }
 
-// ===== SHOW HTML PROPERTIES =====
+// === SHOW HTML PROPERTIES ===
 function showProperties(el){
   const panel=document.getElementById('properties');
   panel.innerHTML='';
@@ -361,7 +350,7 @@ function showProperties(el){
   panel.appendChild(marginLabel); panel.appendChild(marginInput);
 }
 
-// ===== COPY / SAVE / LOAD =====
+// === COPY / SAVE / LOAD ===
 function copyPage(){
   const builder=document.getElementById('builder');
   const temp=document.createElement('textarea');
