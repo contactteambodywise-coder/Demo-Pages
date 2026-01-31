@@ -56,3 +56,60 @@
 
 <h1>Plug-and-Play HTML Builder</h1>
 <p>Pick any element below and copy its container. All elements are ready to use.</p>
+
+<!-- ===== HEADINGS ===== -->
+<div class="element-box" id="heading1">
+  <h2>Heading Level 2</h2>
+  <p>Use this as a section title.</p>
+</div>
+
+<div class="element-box" id="heading2">
+  <h3>Heading Level 3</h3>
+  <p>Smaller section title.</p>
+</div>
+
+<!-- ===== PARAGRAPH ===== -->
+<div class="element-box" id="paragraph1">
+  <p>This is a sample paragraph. Replace this text with your own content.</p>
+</div>
+
+<!-- ===== BUTTON ===== -->
+<div class="element-box" id="button1">
+  <button class="plug-button" onclick="alert('You clicked me!')">Click Me!</button>
+</div>
+
+<!-- ===== IMAGE ===== -->
+<div class="element-box" id="image1">
+  <img src="https://via.placeholder.com/300x150" alt="Sample Image">
+  <p>Use this image placeholder or replace with your own image URL.</p>
+</div>
+
+<!-- ===== FORM INPUT ===== -->
+<div class="element-box" id="form1">
+  <form onsubmit="submitForm(event)">
+    <label for="nameInput">Your Name:</label>
+    <input type="text" id="nameInput" placeholder="Type your name here">
+    <button type="submit">Submit</button>
+  </form>
+  <p id="formMessage"></p>
+</div>
+
+<!-- ===== LINK ===== -->
+<div class="element-box" id="link1">
+  <a href="https://example.com" target="_blank">Go to Example.com</a>
+</div>
+
+<script>
+  // ===== FORM SUBMISSION FUNCTION =====
+  function submitForm(event) {
+    event.preventDefault(); // Prevent page refresh
+    const name = document.getElementById('nameInput').value;
+    const message = document.getElementById('formMessage');
+    if(name) {
+      message.textContent = `Hello, ${name}! Form submitted successfully.`;
+      message.style.color = 'green';
+    } else {
+      message.textContent = "Please type your name!";
+      message.style.color = 'red';
+    }
+  }
