@@ -1,115 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plug-and-Play HTML Builder</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-      background: #f9f9f9;
-    }
-    h1, h2, h3 {
-      color: #333;
-    }
-    .element-box {
-      border: 1px dashed #aaa;
-      padding: 10px;
-      margin: 10px 0;
-      background: white;
-    }
-    button {
-      padding: 8px 15px;
-      font-size: 16px;
-      cursor: pointer;
-      margin: 5px;
-      border-radius: 5px;
-      border: 2px solid #333;
-      background-color: #f0f0f0;
-      transition: all 0.2s;
-    }
-    button:hover {
-      background-color: #ddd;
-    }
-    input, textarea {
-      padding: 5px;
-      font-size: 16px;
-      margin: 5px 0;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: 5px 0;
-    }
-    .plug-button {
-      background-color: #1E90FF;
-      color: white;
-      border: none;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HTML Page Builder - All Elements</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 10px;
+    background: #f0f0f0;
+  }
+  .element-box {
+    border: 1px dashed #888;
+    background: #fff;
+    margin: 10px 0;
+    padding: 10px;
+  }
+  h1, h2, h3 {
+    margin: 5px 0;
+  }
+  code {
+    background: #eee;
+    padding: 2px 5px;
+  }
+  button {
+    padding: 5px 10px;
+    margin: 5px 0;
+    cursor: pointer;
+  }
+  input, textarea, select {
+    width: 100%;
+    margin: 5px 0;
+    padding: 5px;
+  }
+</style>
 </head>
 <body>
 
-<h1>Plug-and-Play HTML Builder</h1>
-<p>Pick any element below and copy its container. All elements are ready to use.</p>
+<h1>HTML Page Builder - Plug-and-Play Elements</h1>
+<p>Copy any box and paste it into your HTML page.</p>
 
-<!-- ===== HEADINGS ===== -->
-<div class="element-box" id="heading1">
-  <h2>Heading Level 2</h2>
-  <p>Use this as a section title.</p>
+<!-- ===================== HEADINGS ===================== -->
+<div class="element-box">
+<h2>Headings</h2>
+<h1>H1 Heading</h1>
+<h2>H2 Heading</h2>
+<h3>H3 Heading</h3>
+<h4>H4 Heading</h4>
+<h5>H5 Heading</h5>
+<h6>H6 Heading</h6>
+<p><i>Headings are used for section titles, big to small.</i></p>
 </div>
 
-<div class="element-box" id="heading2">
-  <h3>Heading Level 3</h3>
-  <p>Smaller section title.</p>
+<!-- ===================== PARAGRAPHS ===================== -->
+<div class="element-box">
+<h2>Paragraphs</h2>
+<p>This is a normal paragraph. Use paragraphs for regular text content.</p>
+<p><strong>Bold</strong> and <em>Italic</em> text example.</p>
+<p><mark>Highlighted text</mark> example.</p>
+<p><small>Small text</small> example.</p>
+<p><i>Paragraph elements are great for blocks of text.</i></p>
 </div>
 
-<!-- ===== PARAGRAPH ===== -->
-<div class="element-box" id="paragraph1">
-  <p>This is a sample paragraph. Replace this text with your own content.</p>
+<!-- ===================== LINKS ===================== -->
+<div class="element-box">
+<h2>Links</h2>
+<a href="https://example.com" target="_blank">Go to Example.com</a>
+<p><i>Use &lt;a&gt; for hyperlinks. target="_blank" opens in a new tab.</i></p>
 </div>
 
-<!-- ===== BUTTON ===== -->
-<div class="element-box" id="button1">
-  <button class="plug-button" onclick="alert('You clicked me!')">Click Me!</button>
+<!-- ===================== IMAGES ===================== -->
+<div class="element-box">
+<h2>Images</h2>
+<img src="https://via.placeholder.com/200x100" alt="Sample Image">
+<p><i>Use &lt;img&gt; to display images. Replace src with your URL.</i></p>
 </div>
 
-<!-- ===== IMAGE ===== -->
-<div class="element-box" id="image1">
-  <img src="https://via.placeholder.com/300x150" alt="Sample Image">
-  <p>Use this image placeholder or replace with your own image URL.</p>
+<!-- ===================== LISTS ===================== -->
+<div class="element-box">
+<h2>Lists</h2>
+<h3>Unordered List</h3>
+<ul>
+  <li>Item 1</li>
+  <li>Item 2</li>
+  <li>Item 3</li>
+</ul>
+<h3>Ordered List</h3>
+<ol>
+  <li>First</li>
+  <li>Second</li>
+  <li>Third</li>
+</ol>
+<h3>Definition List</h3>
+<dl>
+  <dt>HTML</dt>
+  <dd>Hypertext Markup Language</dd>
+  <dt>CSS</dt>
+  <dd>Cascading Style Sheets</dd>
+</dl>
+<p><i>Use lists to organize information neatly.</i></p>
 </div>
 
-<!-- ===== FORM INPUT ===== -->
-<div class="element-box" id="form1">
-  <form onsubmit="submitForm(event)">
-    <label for="nameInput">Your Name:</label>
-    <input type="text" id="nameInput" placeholder="Type your name here">
-    <button type="submit">Submit</button>
-  </form>
-  <p id="formMessage"></p>
+<!-- ===================== TABLES ===================== -->
+<div class="element-box">
+<h2>Tables</h2>
+<table border="1" cellpadding="5">
+  <tr>
+    <th>Header 1</th><th>Header 2</th>
+  </tr>
+  <tr>
+    <td>Data 1</td><td>Data 2</td>
+  </tr>
+  <tr>
+    <td>Data 3</td><td>Data 4</td>
+  </tr>
+</table>
+<p><i>Use &lt;table&gt; for tabular data.</i></p>
 </div>
 
-<!-- ===== LINK ===== -->
-<div class="element-box" id="link1">
-  <a href="https://example.com" target="_blank">Go to Example.com</a>
+<!-- ===================== FORMS ===================== -->
+<div class="element-box">
+<h2>Forms</h2>
+<form onsubmit="alert('Form submitted!'); return false;">
+  <label for="nameInput">Name:</label>
+  <input type="text" id="nameInput" placeholder="Type your name">
+  <label for="emailInput">Email:</label>
+  <input type="email" id="emailInput" placeholder="Type your email">
+  <label for="messageInput">Message:</label>
+  <textarea id="messageInput" rows="3" placeholder="Your message"></textarea>
+  <label for="selectInput">Pick one:</label>
+  <select id="selectInput">
+    <option value="1">Option 1</option>
+    <option value="2">Option 2</option>
+  </select>
+  <button type="submit">Submit</button>
+</form>
+<p><i>Forms let users input data. All inputs, selects, and textareas are here.</i></p>
 </div>
 
+<!-- ===================== MEDIA ===================== -->
+<div class="element-box">
+<h2>Media</h2>
+<video width="320" height="240" controls>
+  <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+  Your browser does not support HTML video.
+</video>
+<audio controls>
+  <source src="https://www.w3schools.com/html/horse.mp3" type="audio/mpeg">
+  Your browser does not support HTML audio.
+</audio>
+<p><i>Use &lt;video&gt; and &lt;audio&gt; for multimedia content.</i></p>
+</div>
+
+<!-- ===================== SEMANTIC ELEMENTS ===================== -->
+<div class="element-box">
+<h2>Semantic Elements</h2>
+<header>
+  <h3>Header Section</h3>
+</header>
+<nav>
+  <a href="#">Home</a> | <a href="#">About</a>
+</nav>
+<main>
+  <article>
+    <h4>Article Title</h4>
+    <p>This is an article inside main content.</p>
+  </article>
+  <section>
+    <h4>Section Title</h4>
+    <p>This is a section inside main content.</p>
+  </section>
+  <aside>
+    <p>This is an aside (like a sidebar).</p>
+  </aside>
+</main>
+<footer>
+  <p>Footer content here.</p>
+</footer>
+<p><i>Semantic elements describe the meaning of each part.</i></p>
+</div>
+
+<!-- ===================== INTERACTIVE ===================== -->
+<div class="element-box">
+<h2>Interactive Elements</h2>
+<details>
+  <summary>Click to expand details</summary>
+  <p>This content is hidden until you click summary.</p>
+</details>
+<dialog id="dialogExample">
+  <p>This is a dialog box.</p>
+  <button onclick="document.getElementById('dialogExample').close()">Close</button>
+</dialog>
+<button onclick="document.getElementById('dialogExample').showModal()">Open Dialog</button>
+<p><i>Interactive elements can hide/reveal content.</i></p>
+</div>
+
+<!-- ===================== SCRIPT EXAMPLE ===================== -->
+<div class="element-box">
+<h2>Script Example</h2>
+<button onclick="sayHello()">Say Hello</button>
 <script>
-  // ===== FORM SUBMISSION FUNCTION =====
-  function submitForm(event) {
-    event.preventDefault(); // Prevent page refresh
-    const name = document.getElementById('nameInput').value;
-    const message = document.getElementById('formMessage');
-    if(name) {
-      message.textContent = `Hello, ${name}! Form submitted successfully.`;
-      message.style.color = 'green';
-    } else {
-      message.textContent = "Please type your name!";
-      message.style.color = 'red';
-    }
+  function sayHello() {
+    alert('Hello! This is a JavaScript example.');
   }
+</script>
+<p><i>Scripts make your page interactive.</i></p>
+</div>
+
+<!-- ===================== MISCELLANEOUS ===================== -->
+<div class="element-box">
+<h2>Other Elements</h2>
+<hr>
+<br>
+<span>This is a span.</span>
+<abbr title="Hypertext Markup Language">HTML</abbr>
+<mark>Highlighted text</mark>
+<progress value="50" max="100"></progress>
+<time datetime="2026-01-30">January 30, 2026</time>
+<p><i>Miscellaneous elements for special uses.</i></p>
+</div>
+
+</body>
+</html>
