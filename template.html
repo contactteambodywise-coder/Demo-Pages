@@ -3,79 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interactive HTML Page Builder</title>
+<title>Ultimate No-Code HTML Page Builder</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    background: #f0f0f0;
-  }
-  header {
-    background: #333;
-    color: white;
-    padding: 10px;
-  }
-  h1 {
-    margin: 0;
-  }
-  #controls {
-    background: #444;
-    color: white;
-    padding: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 5px;
-  }
-  #controls button {
-    padding: 5px 10px;
-    cursor: pointer;
-    border: none;
-    border-radius: 4px;
-    background: #1E90FF;
-    color: white;
-    transition: 0.2s;
-  }
-  #controls button:hover {
-    background: #0b6fc2;
-  }
-  #builder {
-    padding: 10px;
-    min-height: 80vh;
-    background: white;
-  }
-  .element-box {
-    border: 1px dashed #888;
-    padding: 10px;
-    margin: 5px 0;
-    background: #fafafa;
-    position: relative;
-  }
-  .element-box button.remove {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: red;
-    color: white;
-    padding: 2px 5px;
-    border: none;
-    cursor: pointer;
-  }
-  input, textarea, select {
-    width: 100%;
-    margin: 5px 0;
-    padding: 5px;
-  }
-  img {
-    max-width: 100%;
-    height: auto;
-  }
+  body {font-family: Arial, sans-serif; margin: 0; background: #f0f0f0;}
+  header {background: #333; color: white; padding: 10px;}
+  header h1 {margin: 0;}
+  #controls {background: #444; color: white; padding: 10px; display: flex; flex-wrap: wrap; gap: 5px;}
+  #controls button {padding: 5px 10px; cursor: pointer; border: none; border-radius: 4px; background: #1E90FF; color: white; transition: 0.2s;}
+  #controls button:hover {background: #0b6fc2;}
+  #builder {padding: 10px; min-height: 80vh; background: white; position: relative;}
+  .element-box {border: 1px dashed #888; padding: 10px; margin: 5px 0; background: #fafafa; position: absolute; cursor: grab;}
+  .element-box button.remove {position: absolute; top: 5px; right: 5px; background: red; color: white; padding: 2px 5px; border: none; cursor: pointer;}
+  input, textarea, select {width: 100%; margin: 5px 0; padding: 5px;}
+  img {max-width: 100%; height: auto;}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>Interactive HTML Page Builder</h1>
-  <p>Click a button to add an element. You can remove it with the red "x".</p>
+  <h1>Ultimate No-Code HTML Page Builder</h1>
+  <p>Click buttons to add elements, drag them around, edit text live, remove them, or copy the page HTML.</p>
 </header>
 
 <div id="controls">
@@ -84,11 +31,13 @@
   <button onclick="addElement('p')">Paragraph</button>
   <button onclick="addElement('img')">Image</button>
   <button onclick="addElement('button')">Button</button>
-  <button onclick="addElement('form')">Form</button>
   <button onclick="addElement('a')">Link</button>
   <button onclick="addElement('ul')">Unordered List</button>
   <button onclick="addElement('ol')">Ordered List</button>
+  <button onclick="addElement('table')">Table</button>
+  <button onclick="addElement('form')">Form</button>
   <button onclick="addElement('hr')">Horizontal Line</button>
+  <button onclick="copyPage()">Copy Full Page HTML</button>
 </div>
 
 <div id="builder">
@@ -96,36 +45,41 @@
 </div>
 
 <script>
-  // ===== CHILD-FRIENDLY: PLUGIN FUNCTION =====
-  // This function adds elements to the page builder
-  function addElement(type) {
-    const builder = document.getElementById('builder'); // This is our magic box
+  let elementCount = 0;
 
-    // Create a new box for the element
+  // ===== CHILD-FRIENDLY: ADD ELEMENT FUNCTION =====
+  function addElement(type) {
+    elementCount++;
+    const builder = document.getElementById('builder');
+
     const box = document.createElement('div');
     box.className = 'element-box';
+    box.style.top = (10 + elementCount*10) + 'px';
+    box.style.left = (10 + elementCount*10) + 'px';
+    box.setAttribute('draggable', true);
 
-    // Add remove button for convenience
     const removeBtn = document.createElement('button');
     removeBtn.textContent = 'x';
     removeBtn.className = 'remove';
     removeBtn.onclick = () => box.remove();
     box.appendChild(removeBtn);
 
-    // Decide which element to create
     let elem;
     switch(type) {
       case 'h1':
         elem = document.createElement('h1');
+        elem.contentEditable = true;
         elem.textContent = 'Heading 1';
         break;
       case 'h2':
         elem = document.createElement('h2');
+        elem.contentEditable = true;
         elem.textContent = 'Heading 2';
         break;
       case 'p':
         elem = document.createElement('p');
-        elem.textContent = 'This is a paragraph. You can edit this text.';
+        elem.contentEditable = true;
+        elem.textContent = 'This is a paragraph.';
         break;
       case 'img':
         elem = document.createElement('img');
@@ -135,41 +89,78 @@
       case 'button':
         elem = document.createElement('button');
         elem.textContent = 'Click Me';
-        elem.onclick = () => alert('You clicked the button!');
-        break;
-      case 'form':
-        elem = document.createElement('form');
-        elem.onsubmit = e => {
-          e.preventDefault();
-          alert('Form submitted!');
-        };
-        elem.innerHTML = `
-          <label>Name:</label>
-          <input type="text" placeholder="Type your name">
-          <button type="submit">Submit</button>
-        `;
+        elem.onclick = () => alert('Button clicked!');
         break;
       case 'a':
         elem = document.createElement('a');
         elem.href = 'https://example.com';
         elem.target = '_blank';
+        elem.contentEditable = true;
         elem.textContent = 'Example Link';
         break;
       case 'ul':
         elem = document.createElement('ul');
-        elem.innerHTML = '<li>Item 1</li><li>Item 2</li><li>Item 3</li>';
+        elem.innerHTML = '<li contenteditable="true">Item 1</li><li contenteditable="true">Item 2</li>';
         break;
       case 'ol':
         elem = document.createElement('ol');
-        elem.innerHTML = '<li>First</li><li>Second</li><li>Third</li>';
+        elem.innerHTML = '<li contenteditable="true">First</li><li contenteditable="true">Second</li>';
+        break;
+      case 'table':
+        elem = document.createElement('table');
+        elem.border = '1';
+        elem.innerHTML = '<tr><th contenteditable="true">Header 1</th><th contenteditable="true">Header 2</th></tr><tr><td contenteditable="true">Data 1</td><td contenteditable="true">Data 2</td></tr>';
+        break;
+      case 'form':
+        elem = document.createElement('form');
+        elem.onsubmit = e => { e.preventDefault(); alert('Form submitted!'); };
+        elem.innerHTML = `<label>Name:</label><input type="text" placeholder="Type your name"><button type="submit">Submit</button>`;
         break;
       case 'hr':
         elem = document.createElement('hr');
         break;
     }
 
-    box.appendChild(elem); // Add the element into the box
-    builder.appendChild(box); // Add box into the builder
+    box.appendChild(elem);
+    builder.appendChild(box);
+
+    // ===== DRAG FUNCTIONALITY =====
+    box.onmousedown = function(e) {
+      let shiftX = e.clientX - box.getBoundingClientRect().left;
+      let shiftY = e.clientY - box.getBoundingClientRect().top;
+
+      function moveAt(pageX, pageY) {
+        box.style.left = pageX - shiftX + 'px';
+        box.style.top = pageY - shiftY + 'px';
+      }
+
+      function onMouseMove(e) {
+        moveAt(e.pageX, e.pageY);
+      }
+
+      document.addEventListener('mousemove', onMouseMove);
+
+      box.onmouseup = function() {
+        document.removeEventListener('mousemove', onMouseMove);
+        box.onmouseup = null;
+      }
+    };
+
+    box.ondragstart = function() {
+      return false;
+    };
+  }
+
+  // ===== COPY PAGE HTML FUNCTION =====
+  function copyPage() {
+    const builder = document.getElementById('builder');
+    const temp = document.createElement('textarea');
+    temp.value = builder.innerHTML;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+    alert('Page HTML copied! You can paste it anywhere.');
   }
 </script>
 
