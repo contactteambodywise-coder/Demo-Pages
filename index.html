@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+/<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -49,21 +49,11 @@
 <script>
   // 👇 NOW objects.js can use `scene`
   
-Particles(count=1000,color=0xffffff){
-    const g = new THREE.BufferGeometry();
-    const positions = [];
-    for(let i=0;i<count;i++){
-        positions.push((Math.random()-0.5)*50);
-        positions.push((Math.random()-0.5)*50);
-        positions.push((Math.random()-0.5)*50);
-    }
-    g.setAttribute('position', new THREE.Float32BufferAttribute(positions,3));
-    const m = new THREE.PointsMaterial({color,size:0.1});
-    const points = new THREE.Points(g,m);
-    scene.add(points);
-    objects.push(points);
-    return points;
-}
+
+
+
+
+
 
     function animate() {
     requestAnimationFrame(animate);
