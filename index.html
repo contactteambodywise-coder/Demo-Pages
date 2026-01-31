@@ -2,91 +2,118 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>3D Playground</title>
+  <title>3D Playground (Guaranteed Visible)</title>
   <style>
-    body { margin: 0; overflow: hidden; }
-    canvas { display: block; }
+    body { margin: 0; overflow: hidden; background: black; }
   </style>
 </head>
 <body>
-  <!-- 3D scene will appear here -->
 
-  <!-- Three.js Library -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r153/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/controls/OrbitControls.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/geometries/ParametricGeometries.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/loaders/FontLoader.js"></script>
+<!-- 1️⃣ Three.js core -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
 
-  <!-- Your Mega Objects -->
-  <script src="objects.js"></script>
+<!-- 2️⃣ Orbit controls (camera movement) -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/controls/OrbitControls.js"></script>
 
-  <script>
-    // =====================
-    // 1️⃣ Setup Scene
-    // =====================
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000); // black background
+<!-- 3️⃣ Parametric shapes -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/geometries/ParametricGeometries.js"></script>
 
-    // Camera
-    const camera = new THREE.PerspectiveCamera(
-      75, 
-      window.innerWidth / window.innerHeight, 
-      0.1, 
-      1000
-    );
-    camera.position.set(5,5,10); // place
-    camera.lookAt(0, 0, 0);
- camera back and above
+<!-- 4️⃣ Font loader -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/loaders/FontLoader.js"></script>
 
-    // Renderer
-    const renderer = new THREE.WebGLRenderer({antialias:true});
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    document.body.appendChild(renderer.domElement);
+<!-- 5️⃣ Your objects -->
+<script src="objects.js"></script>
 
-    // Controls
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+<script>
+/* =========================
+   SCENE SETUP
+========================= */
 
-    // Lights
-    const light = new THREE.PointLight(0xffffff, 2);
-    light.position.set(10, 10, 10);
-    scene.add(light);
+// Scene = the room
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
 
-    const ambient = new THREE.AmbientLight(0x404040); // soft light everywhere
-    scene.add(ambient);
+// Camera = your eyes
+const camera = new THREE.PerspectiveCamera(
+  75,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+);
 
-    // =====================
-    // 2️⃣ Add Objects
-    // =====================
-    addCube(0, 0, 0, 2, 2, 2, 0xff0000);         // big red cube in center
-    addSphere(3, 1, 0, 1.5, 0x00ff00);          // green sphere to the right
-    addTorus(-3, 1, 0, 1, 0.4, 0x00ffff);       // cyan torus to the left
-    addMobius(0, 2, -2, 1.5, 0xff00aa);         // magenta Mobius above
-    addParticles(500, 0xffffff);                // 500 white stars around
-    addExtrudeShape([[0,0],[1,0],[0.5,1]], 2, 0, -1, 1, 0xffff00); // yellow extruded triangle
-    addText(0, -2, 0, "3D Playground!", 0xff8800); // orange 3D text below
+// Put camera somewhere sensible
+camera.position.set(0, 5, 12);
+camera.lookAt(0, 0, 0);
 
-    // =====================
-    // 3️⃣ Animate / Render Loop
-    // =====================
-    function animate() {
-      requestAnimationFrame(animate);
+// Renderer = the screen
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
 
-      // optional: spin some objects slowly
-      if(objects[0]) objects[0].rotation.y += 0.01; // cube rotation
-      if(objects[1]) objects[1].rotation.y -= 0.01; // sphere rotation
+// Controls = let you look around
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
 
-      renderer.render(scene, camera);
-    }
-    animate();
+/* =========================
+   LIGHTING (VERY IMPORTANT)
+========================= */
 
-    // =====================
-    // 4️⃣ Handle Window Resize
-    // =====================
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  </script>
+// Soft light everywhere
+const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+scene.add(ambient);
+
+// Strong main light
+const sun = new THREE.DirectionalLight(0xffffff, 1.5);
+sun.position.set(10, 20, 10);
+scene.add(sun);
+
+/* =========================
+   ADD OBJECTS (BIG & CLOSE)
+========================= */
+
+// Big red cube in center
+addCube(0, 0, 0, 3, 3, 3, 0xff0000);
+
+// Green sphere next to it
+addSphere(5, 1, 0, 1.5, 0x00ff00);
+
+// Blue torus
+addTorus(-5, 1, 0, 2, 0.6, 0x00ffff);
+
+// Stars (particles)
+addParticles(800, 0xffffff);
+
+// 3D text
+addText(-4, -3, 0, "IT WORKS!", 0xffaa00);
+
+/* =========================
+   ANIMATION LOOP
+========================= */
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  // Spin the first object (cube)
+  if (objects[0]) {
+    objects[0].rotation.y += 0.01;
+    objects[0].rotation.x += 0.005;
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+animate();
+
+/* =========================
+   RESIZE HANDLING
+========================= */
+window.addEventListener("resize", () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+
 </body>
 </html>
