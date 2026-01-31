@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate 3D + HTML No-Code Page Builder</title>
+<title>Ultimate 3D + HTML Page Builder</title>
 <style>
+  /* Basic layout */
   body {margin:0; font-family: Arial, sans-serif; display:flex; height:100vh;}
   #controls {background:#444; color:white; padding:10px; width:200px; overflow-y:auto;}
   #controls button {padding:5px 10px; margin:2px 0; cursor:pointer; border:none; border-radius:4px; background:#1E90FF; color:white;}
@@ -20,6 +21,7 @@
 </head>
 <body>
 
+<!-- LEFT PANEL: Add elements -->
 <div id="controls">
   <h3>HTML Elements</h3>
   <button onclick="addElement('h1')">Heading H1</button>
@@ -40,8 +42,10 @@
   <button onclick="loadProject()">Load Project</button>
 </div>
 
+<!-- CENTER CANVAS -->
 <div id="builder"></div>
 
+<!-- RIGHT PANEL: Properties -->
 <div id="sidePanel">
 <h3>Element Properties</h3>
 <div id="properties">
@@ -57,7 +61,7 @@
 let elementCount = 0;
 let selectedElement = null;
 
-// ===== DRAG FUNCTION =====
+// ======= DRAG ELEMENT =======
 function dragElement(el){
   el.onmousedown=function(e){
     selectedElement = el;
@@ -76,7 +80,7 @@ function dragElement(el){
   el.ondragstart=function(){ return false; };
 }
 
-// ===== ADD HTML ELEMENTS =====
+// ======= ADD HTML ELEMENT =======
 function addElement(type){
   elementCount++;
   const builder = document.getElementById('builder');
@@ -107,7 +111,7 @@ function addElement(type){
   dragElement(box);
 }
 
-// ===== ADD 3D ELEMENTS =====
+// ======= ADD 3D ELEMENT =======
 function add3D(type){
   const builder = document.getElementById('builder');
   const box = document.createElement('div');
@@ -128,7 +132,7 @@ function add3D(type){
   builder.appendChild(box);
   dragElement(box);
 
-  // ===== THREE.JS SETUP =====
+  // ===== THREE.JS SCENE =====
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
   camera.position.z = 5;
@@ -140,7 +144,6 @@ function add3D(type){
   const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
-  // ===== LIGHTS FIXED =====
   const light1 = new THREE.DirectionalLight(0xffffff,1);
   light1.position.set(5,5,5);
   scene.add(light1);
@@ -172,9 +175,42 @@ function add3D(type){
       }
   }
 
+  // ===== SIDE PANEL CONTROLS FOR 3D OBJECT =====
+  function update3DControls(){
+      const panel = document.getElementById('properties');
+      panel.innerHTML='';
+      if(!mesh) return;
+
+      // Color
+      const colorLabel = document.createElement('label'); colorLabel.textContent='Color:';
+      const colorInput = document.createElement('input'); colorInput.type='color'; colorInput.value='#'+mesh.material.color.getHexString();
+      colorInput.oninput=function(){mesh.material.color.set(this.value);}
+      panel.appendChild(colorLabel); panel.appendChild(colorInput);
+
+      // Rotation X
+      const rotXLabel=document.createElement('label'); rotXLabel.textContent='Rotate X:';
+      const rotX=document.createElement('input'); rotX.type='range'; rotX.min=0; rotX.max=6.28; rotX.step=0.01; rotX.value=mesh.rotation.x;
+      rotX.oninput=function(){mesh.rotation.x=parseFloat(this.value);}
+      panel.appendChild(rotXLabel); panel.appendChild(rotX);
+
+      // Rotation Y
+      const rotYLabel=document.createElement('label'); rotYLabel.textContent='Rotate Y:';
+      const rotY=document.createElement('input'); rotY.type='range'; rotY.min=0; rotY.max=6.28; rotY.step=0.01; rotY.value=mesh.rotation.y;
+      rotY.oninput=function(){mesh.rotation.y=parseFloat(this.value);}
+      panel.appendChild(rotYLabel); panel.appendChild(rotY);
+
+      // Scale
+      const scaleLabel=document.createElement('label'); scaleLabel.textContent='Scale:';
+      const scaleInput=document.createElement('input'); scaleInput.type='range'; scaleInput.min=0.1; scaleInput.max=5; scaleInput.step=0.01; scaleInput.value=mesh.scale.x;
+      scaleInput.oninput=function(){mesh.scale.set(this.value,this.value,this.value);}
+      panel.appendChild(scaleLabel); panel.appendChild(scaleInput);
+  }
+
+  box.onclick=function(){selectedElement=box; update3DControls();}
+
   function animate(){
       requestAnimationFrame(animate);
-      if(mesh){
+      if(mesh && type!=='starfield'){
           mesh.rotation.x += 0.01;
           mesh.rotation.y += 0.01;
       }
@@ -184,7 +220,7 @@ function add3D(type){
   animate();
 }
 
-// ===== ELEMENT SELECTION & SIDE PANEL =====
+// ===== ELEMENT SELECTION & SIDE PANEL FOR HTML =====
 function showProperties(el){
   const panel = document.getElementById('properties');
   panel.innerHTML = '';
@@ -202,6 +238,14 @@ function showProperties(el){
       const colorInput=document.createElement('input'); colorInput.type='color';
       colorInput.oninput=function(){elem.style.color=this.value;}
       panel.appendChild(colorLabel); panel.appendChild(colorInput);
+  }
+
+  // Font size
+  if(elem.contentEditable){
+      const sizeLabel=document.createElement('label'); sizeLabel.textContent='Font Size:';
+      const sizeInput=document.createElement('input'); sizeInput.type='number'; sizeInput.value=parseInt(window.getComputedStyle(elem).fontSize);
+      sizeInput.oninput=function(){elem.style.fontSize=this.value+'px';}
+      panel.appendChild(sizeLabel); panel.appendChild(sizeInput);
   }
 }
 
