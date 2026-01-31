@@ -9,8 +9,8 @@
   </style>
 </head>
 <body>
-  <!-- Your 3D scene will appear automatically in the body -->
-  
+  <!-- 3D scene will appear here -->
+
   <!-- Three.js Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r153/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/controls/OrbitControls.js"></script>
@@ -20,64 +20,68 @@
   <!-- Your Mega Objects -->
   <script src="objects.js"></script>
 
-  <!-- Your Scene Setup -->
   <script>
-    // Scene
+    // =====================
+    // 1️⃣ Setup Scene
+    // =====================
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000000);
+    scene.background = new THREE.Color(0x000000); // black background
 
     // Camera
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
-    camera.position.z = 10;
+    const camera = new THREE.PerspectiveCamera(
+      75, 
+      window.innerWidth / window.innerHeight, 
+      0.1, 
+      1000
+    );
+    camera.position.set(5,5,10); // place camera back and above
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({antialias:true});
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Controls (to move the camera)
+    // Controls
     const controls = new THREE.OrbitControls(camera, renderer.domElement);
 
     // Lights
-    const light = new THREE.PointLight(0xffffff,1);
-    light.position.set(10,10,10);
+    const light = new THREE.PointLight(0xffffff, 1.5);
+    light.position.set(10, 10, 10);
     scene.add(light);
 
-    // ---------------------------
-    // THIS IS WHERE YOU ADD OBJECTS
+    const ambient = new THREE.AmbientLight(0x404040); // soft light everywhere
+    scene.add(ambient);
 
-function addSphere(x=1,y=1,z=1,r=20,color=0x0000ff){
-    const g = new THREE.SphereGeometry(r,32,32);
-    const m = new THREE.MeshStandardMaterial({color});
-    const s = new THREE.Mesh(g,m);
-    s.position.set(x,y,z);
-    scene.add(s);
-    objects.push(s);
-    return s;
+    // =====================
+    // 2️⃣ Add Objects
+    // =====================
+    addCube(0, 0, 0, 2, 2, 2, 0xff0000);         // big red cube in center
+    addSphere(3, 1, 0, 1.5, 0x00ff00);          // green sphere to the right
+    addTorus(-3, 1, 0, 1, 0.4, 0x00ffff);       // cyan torus to the left
+    addMobius(0, 2, -2, 1.5, 0xff00aa);         // magenta Mobius above
+    addParticles(500, 0xffffff);                // 500 white stars around
+    addExtrudeShape([[0,0],[1,0],[0.5,1]], 2, 0, -1, 1, 0xffff00); // yellow extruded triangle
+    addText(0, -2, 0, "3D Playground!", 0xff8800); // orange 3D text below
 
-
-
-
-
-    // ---------------------------
-    addCube(0,0,0);               // adds a cube at origin
-    addSphere(2,0,0,1,0xff0000); // adds a red sphere
-    addMobius(-2,0,0,1,0xff00aa);// adds a Mobius strip
-    addParticles(500);            // adds 500 stars
-    addExtrudeShape([[0,0],[1,0],[0.5,1]],0,2,0,1,0xffff00); // extruded triangle
-
-    // ---------------------------
-    // Render Loop
-    // ---------------------------
-    function animate(){
+    // =====================
+    // 3️⃣ Animate / Render Loop
+    // =====================
+    function animate() {
       requestAnimationFrame(animate);
-      renderer.render(scene,camera);
+
+      // optional: spin some objects slowly
+      if(objects[0]) objects[0].rotation.y += 0.01; // cube rotation
+      if(objects[1]) objects[1].rotation.y -= 0.01; // sphere rotation
+
+      renderer.render(scene, camera);
     }
     animate();
 
-    // Resize handling
-    window.addEventListener('resize', ()=>{
-      camera.aspect = window.innerWidth/window.innerHeight;
+    // =====================
+    // 4️⃣ Handle Window Resize
+    // =====================
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
     });
