@@ -3,9 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate 3D + HTML Page Builder (Mobile Friendly)</title>
+<title>Ultimate 3D + HTML Page Builder (Fixed 3D)</title>
 <style>
-/* ========== LAYOUT ========== */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
@@ -88,7 +87,7 @@ canvas {
   height: 100%;
 }
 
-/* ========== MOBILE FRIENDLY ========== */
+/* MOBILE FRIENDLY */
 @media (max-width: 900px) {
   body {
     flex-direction: column;
@@ -105,31 +104,28 @@ canvas {
 </head>
 <body>
 
-<!-- LEFT PANEL: Add HTML & 3D elements -->
 <div id="controls">
-  <h3>HTML Elements</h3>
-  <button onclick="addElement('h1')">Heading H1</button>
-  <button onclick="addElement('p')">Paragraph</button>
-  <button onclick="addElement('img')">Image</button>
-  <button onclick="addElement('button')">Button</button>
-  <button onclick="addElement('a')">Link</button>
-  <button onclick="addElement('ul')">Unordered List</button>
-  <button onclick="addElement('ol')">Ordered List</button>
-  <button onclick="addElement('table')">Table</button>
-  <h3>3D Objects</h3>
-  <button onclick="add3D('cube')">Cube</button>
-  <button onclick="add3D('sphere')">Sphere</button>
-  <button onclick="add3D('starfield')">Starfield</button>
-  <h3>Actions</h3>
-  <button onclick="copyPage()">Copy Full Page HTML</button>
-  <button onclick="saveProject()">Save Project</button>
-  <button onclick="loadProject()">Load Project</button>
+<h3>HTML Elements</h3>
+<button onclick="addElement('h1')">Heading H1</button>
+<button onclick="addElement('p')">Paragraph</button>
+<button onclick="addElement('img')">Image</button>
+<button onclick="addElement('button')">Button</button>
+<button onclick="addElement('a')">Link</button>
+<button onclick="addElement('ul')">Unordered List</button>
+<button onclick="addElement('ol')">Ordered List</button>
+<button onclick="addElement('table')">Table</button>
+<h3>3D Objects</h3>
+<button onclick="add3D('cube')">Cube</button>
+<button onclick="add3D('sphere')">Sphere</button>
+<button onclick="add3D('starfield')">Starfield</button>
+<h3>Actions</h3>
+<button onclick="copyPage()">Copy Full Page HTML</button>
+<button onclick="saveProject()">Save Project</button>
+<button onclick="loadProject()">Load Project</button>
 </div>
 
-<!-- CENTER BUILDER -->
 <div id="builder"></div>
 
-<!-- RIGHT PANEL: Element Properties -->
 <div id="sidePanel">
 <h3>Element Properties</h3>
 <div id="properties">
@@ -137,7 +133,6 @@ canvas {
 </div>
 </div>
 
-<!-- THREE.JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.min.js"></script>
 
@@ -145,7 +140,7 @@ canvas {
 let elementCount = 0;
 let selectedElement = null;
 
-// ===== DRAG ELEMENT FUNCTION =====
+// ===== DRAG FUNCTION =====
 function dragElement(el){
   el.onmousedown = function(e){
     selectedElement = el;
@@ -194,8 +189,6 @@ function addElement(type){
   box.appendChild(elem);
   builder.appendChild(box);
   dragElement(box);
-
-  // Select element on click
   box.onclick=function(){selectedElement=box; showProperties(box);}
 }
 
@@ -220,22 +213,32 @@ function add3D(type){
   builder.appendChild(box);
   dragElement(box);
 
-  // ===== THREE.JS SETUP =====
+  // ===== THREE.JS =====
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(75,1,0.1,1000);
+  const camera = new THREE.PerspectiveCamera(75, canvasContainer.clientWidth/canvasContainer.clientHeight, 0.1, 1000);
   camera.position.z=5;
 
-  const renderer=new THREE.WebGLRenderer({antialias:true});
-  renderer.setSize(300,300);
+  const renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(window.devicePixelRatio);
   canvasContainer.appendChild(renderer.domElement);
 
-  const controls=new THREE.OrbitControls(camera,renderer.domElement);
+  // Make canvas responsive
+  function resizeRenderer(){
+    const width = canvasContainer.clientWidth;
+    const height = canvasContainer.clientHeight;
+    renderer.setSize(width,height);
+    camera.aspect = width/height;
+    camera.updateProjectionMatrix();
+  }
+  resizeRenderer();
+  new ResizeObserver(resizeRenderer).observe(canvasContainer);
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
   controls.enableDamping=true;
 
-  // Lights
-  const light1=new THREE.DirectionalLight(0xffffff,1);
+  const light1 = new THREE.DirectionalLight(0xffffff,1);
   light1.position.set(5,5,5); scene.add(light1);
-  const light2=new THREE.AmbientLight(0x404040,1.5); scene.add(light2);
+  const light2 = new THREE.AmbientLight(0x404040,1.5); scene.add(light2);
 
   let mesh;
   if(type==='cube'){ 
@@ -262,19 +265,17 @@ function add3D(type){
     }
   }
 
-  // ===== SIDE PANEL CONTROLS =====
+  // ===== 3D CONTROLS =====
   function update3DControls(){
     const panel=document.getElementById('properties');
     panel.innerHTML='';
     if(!mesh) return;
 
-    // Color
     const colorLabel=document.createElement('label'); colorLabel.textContent='Color:';
     const colorInput=document.createElement('input'); colorInput.type='color'; colorInput.value='#'+mesh.material.color.getHexString();
     colorInput.oninput=function(){mesh.material.color.set(this.value);}
     panel.appendChild(colorLabel); panel.appendChild(colorInput);
 
-    // Material type
     const matLabel=document.createElement('label'); matLabel.textContent='Material:';
     const matSelect=document.createElement('select');
     ['Standard','Metal','Phong','Basic','Lambert'].forEach(type=>{
@@ -292,19 +293,16 @@ function add3D(type){
     }
     panel.appendChild(matLabel); panel.appendChild(matSelect);
 
-    // Rotation X
     const rotXLabel=document.createElement('label'); rotXLabel.textContent='Rotate X:';
     const rotX=document.createElement('input'); rotX.type='range'; rotX.min=0; rotX.max=6.28; rotX.step=0.01; rotX.value=mesh.rotation.x;
     rotX.oninput=function(){mesh.rotation.x=parseFloat(this.value);}
     panel.appendChild(rotXLabel); panel.appendChild(rotX);
 
-    // Rotation Y
     const rotYLabel=document.createElement('label'); rotYLabel.textContent='Rotate Y:';
     const rotY=document.createElement('input'); rotY.type='range'; rotY.min=0; rotY.max=6.28; rotY.step=0.01; rotY.value=mesh.rotation.y;
     rotY.oninput=function(){mesh.rotation.y=parseFloat(this.value);}
     panel.appendChild(rotYLabel); panel.appendChild(rotY);
 
-    // Scale
     const scaleLabel=document.createElement('label'); scaleLabel.textContent='Scale:';
     const scaleInput=document.createElement('input'); scaleInput.type='range'; scaleInput.min=0.1; scaleInput.max=5; scaleInput.step=0.01; scaleInput.value=mesh.scale.x;
     scaleInput.oninput=function(){mesh.scale.set(this.value,this.value,this.value);}
@@ -312,7 +310,7 @@ function add3D(type){
   }
 
   box.onclick=function(){selectedElement=box; update3DControls();}
-  
+
   function animate(){
     requestAnimationFrame(animate);
     if(mesh && type!=='starfield'){ mesh.rotation.x+=0.01; mesh.rotation.y+=0.01; }
@@ -322,7 +320,7 @@ function add3D(type){
   animate();
 }
 
-// ===== SHOW PROPERTIES FOR HTML ELEMENTS =====
+// ===== SHOW HTML PROPERTIES =====
 function showProperties(el){
   const panel=document.getElementById('properties');
   panel.innerHTML='';
@@ -342,34 +340,28 @@ function showProperties(el){
     panel.appendChild(colorLabel); panel.appendChild(colorInput);
   }
 
-  // Font size
-  if(elem.contentEditable){
-    const sizeLabel=document.createElement('label'); sizeLabel.textContent='Font Size:';
-    const sizeInput=document.createElement('input'); sizeInput.type='number'; sizeInput.value=parseInt(window.getComputedStyle(elem).fontSize);
-    sizeInput.oninput=function(){elem.style.fontSize=this.value+'px';}
-    panel.appendChild(sizeLabel); panel.appendChild(sizeInput);
-  }
+  const sizeLabel=document.createElement('label'); sizeLabel.textContent='Font Size:';
+  const sizeInput=document.createElement('input'); sizeInput.type='number'; sizeInput.value=parseInt(window.getComputedStyle(elem).fontSize);
+  sizeInput.oninput=function(){elem.style.fontSize=this.value+'px';}
+  panel.appendChild(sizeLabel); panel.appendChild(sizeInput);
 
-  // Background
   const bgLabel=document.createElement('label'); bgLabel.textContent='Background:';
   const bgInput=document.createElement('input'); bgInput.type='color';
   bgInput.oninput=function(){elem.style.backgroundColor=this.value;}
   panel.appendChild(bgLabel); panel.appendChild(bgInput);
 
-  // Padding
   const padLabel=document.createElement('label'); padLabel.textContent='Padding:';
   const padInput=document.createElement('input'); padInput.type='number'; padInput.value=parseInt(window.getComputedStyle(elem).padding);
   padInput.oninput=function(){elem.style.padding=this.value+'px';}
   panel.appendChild(padLabel); panel.appendChild(padInput);
 
-  // Margin
   const marginLabel=document.createElement('label'); marginLabel.textContent='Margin:';
   const marginInput=document.createElement('input'); marginInput.type='number'; marginInput.value=parseInt(window.getComputedStyle(elem).margin);
   marginInput.oninput=function(){elem.style.margin=this.value+'px';}
   panel.appendChild(marginLabel); panel.appendChild(marginInput);
 }
 
-// ===== COPY PAGE HTML =====
+// ===== COPY / SAVE / LOAD =====
 function copyPage(){
   const builder=document.getElementById('builder');
   const temp=document.createElement('textarea');
@@ -380,8 +372,6 @@ function copyPage(){
   document.body.removeChild(temp);
   alert('Page HTML copied!');
 }
-
-// ===== SAVE / LOAD PROJECT =====
 function saveProject(){
   localStorage.setItem('myPageBuilderProject',document.getElementById('builder').innerHTML);
   alert('Project saved!');
