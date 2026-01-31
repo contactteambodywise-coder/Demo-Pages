@@ -10,7 +10,7 @@
 <body>
 
 <!-- 1️⃣ Three.js core -->
-src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/controls/OrbitControls.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/geometries/ParametricGeometries.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.153.0/examples/js/loaders/FontLoader.js"></script>
@@ -46,86 +46,17 @@ src="https://cdn.jsdelivr.net/npm/three@0.153.0/build/three.min.js"></script>
 <!-- 👇 NOW load objects.js -->
 <script src="objects.js"></script>
 
+<script>
+  // 👇 NOW objects.js can use `scene`
+  addCube(0, 0, 0, 3, 3, 3, 0xff0000);
+  addSphere(5, 1, 0, 1.5, 0x00ff00);
+  addParticles(800, 0xffffff);
 
-/* =========================
-   SCENE SETUP
-========================= */
-
-// Scene = the room
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
-
-// Camera = your eyes
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-
-// Put camera somewhere sensible
-camera.position.set(0, 5, 12);
-camera.lookAt(0, 0, 0);
-
-// Renderer = the screen
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(renderer.domElement);
-
-// Controls = let you look around
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-
-/* =========================
-   LIGHTING (VERY IMPORTANT)
-========================= */
-
-// Soft light everywhere
-const ambient = new THREE.AmbientLight(0xffffff, 0.6);
-scene.add(ambient);
-
-// Strong main light
-const sun = new THREE.DirectionalLight(0xffffff, 1.5);
-sun.position.set(10, 20, 10);
-scene.add(sun);
-
-/* =========================
-   ADD OBJECTS (BIG & CLOSE)
-========================= */
-
-// Big red cube in center
-addCube(0, 0, 0, 3, 3, 3, 0xff0000);
-
-// Green sphere next to it
-addSphere(5, 1, 0, 1.5, 0x00ff00);
-
-// Blue torus
-addTorus(-5, 1, 0, 2, 0.6, 0x00ffff);
-
-// Stars (particles)
-addParticles(800, 0xffffff);
-
-// 3D text
-addText(-4, -3, 0, "IT WORKS!", 0xffaa00);
-
-/* =========================
-   ANIMATION LOOP
-========================= */
-
-function animate() {
-  requestAnimationFrame(animate);
-
-  // Spin the first object (cube)
-  if (objects[0]) {
-    objects[0].rotation.y += 0.01;
-    objects[0].rotation.x += 0.005;
+  function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
   }
-
-  controls.update();
-  renderer.render(scene, camera);
-}
-
-animate();
+  animate();
 
 /* =========================
    RESIZE HANDLING
