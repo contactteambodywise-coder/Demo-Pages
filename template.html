@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Plug-and-Play Web Page</title>
+  <style>
+    body {
+      margin: 0; /* Remove space around page */
+      overflow: hidden; /* Hide scrollbars */
+      background: black; /* Space background */
+      font-family: Arial, sans-serif;
+    }
+    #info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      z-index: 1;
+      background: rgba(0,0,0,0.5);
+      padding: 5px 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div id="info">
+  Click the cube! Move mouse to rotate camera.
+</div>
+
+<!-- We include Three.js from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/controls/OrbitControls.min.js"></script>
+
+<script>
+  // ====== CHILD-FRIENDLY EXPLANATION =====
+  // A scene is like a magic box where we put all 3D objects.
+  // The camera is like your eyes in the box.
+  // Renderer draws everything on your screen.
+  
+  // 1. SETUP SCENE
+  const scene = new THREE.Scene(); // Our 3D world
+  scene.background = new THREE.Color(0x000000); // Black background like space
+
+  // 2. SETUP CAMERA
+  const camera = new THREE.PerspectiveCamera(
+    75, // Field of view (like how wide your eyes can see)
+    window.innerWidth / window.innerHeight, // Aspect ratio
+    0.1, // Near distance
+    1000 // Far distance
+  );
+  camera.position.z = 5; // Move camera back a bit
+
+  // 3. SETUP RENDERER
+  const renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(window.innerWidth, window.innerHeight); // Full screen
+  document.body.appendChild(renderer.domElement); // Put it on the page
+
+  // 4. CAMERA CONTROLS
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true; // Smooth camera movement
+
+  // 5. ADD A CUBE
+  const geometry = new THREE.BoxGeometry(); // Cube shape
+  const material = new THREE.MeshStandardMaterial({color: 0x00ff00}); // Green
+  const cube = new THREE.Mesh(geometry, material); // Combine shape + color
+  scene.add(cube); // Put cube into the scene
+
+  // 6. ADD LIGHT
+  const light = new THREE.PointLight(0xffffff, 1, 100); // White light
+  light.position.set(10, 10, 10); // Place light somewhere
+  scene.add(light);
+
+  // 7. ADD STARS (tiny white dots)
+  function addStar() {
+    const starGeo = new THREE.SphereGeometry(0.05, 8, 8); // Tiny sphere
+    const starMat = new THREE.MeshBasicMaterial({color: 0xffffff}); // White
+    const star = new THREE.Mesh(starGeo, starMat);
+    // Random position
+    star.position.x = Math.random() * 20 - 10;
+    star.position.y = Math.random() * 20 - 10;
+    star.position.z = Math.random() * 20 - 10;
+    scene.add(star);
+  }
+  for (let i = 0; i < 200; i++) { // Add 200 stars
+    addStar();
+  }
+
+  // 8. HANDLE WINDOW RESIZE
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix(); // Update camera
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // 9. CLICKABLE CUBE
+  const raycaster = new THREE.Raycaster(); // Invisible pointer
+  const mouse = new THREE.Vector2();
+
+  window.addEventListener('click', (event) => {
+    // Convert mouse to normalized coordinates (-1 to +1)
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera(mouse, camera); // Shoot invisible ray
+    const intersects = raycaster.intersectObjects([cube]); // Check if cube hit
+    if (intersects.length > 0) {
+      cube.material.color.set(Math.random() * 0xffffff); // Random color
+    }
+  });
+
+  // 10. ANIMATION LOOP
+  function animate() {
+    requestAnimationFrame(animate); // Keep looping
+
+    cube.rotation.x += 0.01; // Slowly rotate cube
+    cube.rotation.y += 0.01;
+
+    controls.update(); // Update camera smoothly
+    renderer.render(scene, camera); // Draw scene
+  }
+
+  animate(); // Start animation
+</script>
+
+</body>
+</html>
