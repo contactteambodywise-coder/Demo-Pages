@@ -1,1 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Button Example</title>
+  <style>
+    /* This styles the button */
+    .super-button {
+      background-color: #1E90FF; /* Blue color of the button */
+      color: white;              /* Text on the button is white */
+      border: 2px solid #1C86EE; /* A slightly darker border */
+      border-radius: 10px;       /* Rounded corners like a pill */
+      padding: 12px 25px;        /* Space inside the button (top/bottom, left/right) */
+      font-size: 18px;           /* Big enough text to read easily */
+      font-family: Arial, sans-serif; /* Makes text look nice */
+      cursor: pointer;           /* Shows hand pointer when hovering */
+      transition: all 0.3s;      /* Smooth animation when hover or click */
+      box-shadow: 0 5px #104E8B; /* Makes the button look raised */
+      position: relative;        /* For special effects inside */
+    }
 
+    /* Hover effect - when mouse is on the button */
+    .super-button:hover {
+      background-color: #63B8FF; /* Lighter blue when hovering */
+      box-shadow: 0 3px #104E8B; /* Looks like button presses slightly */
+      transform: translateY(2px); /* Moves down a little for 3D effect */
+    }
+
+    /* Active effect - when button is clicked */
+    .super-button:active {
+      background-color: #104E8B; /* Dark blue when pressed */
+      box-shadow: 0 1px #104E8B; /* Pressed down shadow */
+      transform: translateY(4px); /* Looks like pushing the button */
+    }
+
+    /* Disabled button - cannot click */
+    .super-button:disabled {
+      background-color: #A9A9A9; /* Gray color for disabled */
+      border-color: #808080;     /* Gray border */
+      cursor: not-allowed;       /* Shows a forbidden sign */
+      box-shadow: none;          /* Flat look */
+    }
+
+    /* Tooltip container */
+    .tooltip {
+      position: relative;        /* Needed to place the tooltip */
+      display: inline-block;     /* So text wraps nicely */
+    }
+
+    /* Tooltip text */
+    .tooltip .tooltiptext {
+      visibility: hidden;        /* Hide by default */
+      width: 160px;              /* Width of tooltip box */
+      background-color: black;   /* Black box */
+      color: #fff;               /* White text */
+      text-align: center;        /* Center text */
+      padding: 5px;              /* Space inside box */
+      border-radius: 5px;        /* Rounded corners */
+      position: absolute;        /* Position relative to button */
+      z-index: 1;                /* Sit on top */
+      bottom: 125%;              /* Place above the button */
+      left: 50%;                 /* Center horizontally */
+      margin-left: -80px;        /* Half width offset to center */
+      opacity: 0;                /* Invisible initially */
+      transition: opacity 0.3s;  /* Smooth fade in/out */
+    }
+
+    /* Show tooltip on hover */
+    .tooltip:hover .tooltiptext {
+      visibility: visible;
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Super Button with All Features</h2>
+
+<!-- Tooltip container -->
+<div class="tooltip">
+  <!-- Button -->
+  <button class="super-button" aria-pressed="false" onclick="buttonClicked(this)">
+    Click Me!
+  </button>
+  <!-- Tooltip text -->
+  <span class="tooltiptext">I am a helpful tooltip!</span>
+</div>
+
+<br><br>
+
+<!-- Disabled button example -->
+<button class="super-button" disabled>
+  Disabled Button
+</button>
+
+<script>
+  // This function runs when button is clicked
+  function buttonClicked(button) {
+    // Toggle aria-pressed for accessibility
+    if(button.getAttribute('aria-pressed') === 'false') {
+      button.setAttribute('aria-pressed', 'true');
+      button.textContent = "Pressed!";
+    } else {
+      button.setAttribute('aria-pressed', 'false');
+      button.textContent = "Click Me!";
+    }
+  }
+</script>
+
+</body>
+</html>
+
+
+<div class="tooltip">
+  <button class="super-button" aria-pressed="false" onclick="buttonClicked(this)">Click Me!</button>
+  <span class="tooltiptext">I am a helpful tooltip!</span>
+</div> 
+
+function buttonClicked(button) {
+  if(button.getAttribute('aria-pressed') === 'false') {
+    button.setAttribute('aria-pressed', 'true');
+    button.textContent = "Pressed!";
+  } else {
+    button.setAttribute('aria-pressed', 'false');
+    button.textContent = "Click Me!";
+  }
+}
