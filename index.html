@@ -45,6 +45,20 @@
 
     // ---------------------------
     // THIS IS WHERE YOU ADD OBJECTS
+
+function addSphere(x=0,y=0,z=0,r=1,color=0xff0000){
+    const g = new THREE.SphereGeometry(r,32,32);
+    const m = new THREE.MeshStandardMaterial({color});
+    const s = new THREE.Mesh(g,m);
+    s.position.set(x,y,z);
+    scene.add(s);
+    objects.push(s);
+    return s;
+
+
+
+
+
     // ---------------------------
     addCube(0,0,0);               // adds a cube at origin
     addSphere(2,0,0,1,0xff0000); // adds a red sphere
